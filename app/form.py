@@ -9,7 +9,7 @@ class PrinterForm(forms.ModelForm):
         labels = {
             'pritner_id': 'pritner_id',
             'owner': '打印机所有者',
-            'adder': '打印机所在位置',
+            'address': '打印机所在位置',
         }
 
         help_texts = {

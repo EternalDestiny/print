@@ -61,6 +61,11 @@ def register_printer(request):
             error_msg = v.errors.as_json()
             return render(request, 'register_printer.html', locals())
 
+def del_printer(request):
+    if request.method == 'PSOT':
+        printer_sel = RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id'])
+        printer_sel.delete()
+        return redirect('/list/')
 
 def printerlist_api(request):
     printer_list = {}

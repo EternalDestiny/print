@@ -23,7 +23,6 @@
 {#</script>#}
 
 <script>
-
     window.setInterval(myFunction, 1000 * 5);
     var i = 1;
 
@@ -34,7 +33,7 @@
 
         httpRequest.open("get", "ajax/");
         httpRequest.send(null);
-        {#httpRequest.responseType="json";#}
+        httpRequest.responseType = "json";
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                 var json = httpRequest.responseText;
@@ -42,7 +41,6 @@
             }
         };
     }
-
 </script>
 
 <table border="1">

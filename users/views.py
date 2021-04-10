@@ -10,7 +10,7 @@ def login(request):
         password = request.POST.get('请输入密码')
         user_obj = models.User.objects.filter(username=username, password=password).first()
         if user_obj:
-            return redirect('/calpage/')
+            return redirect('/list/')
         else:
             return HttpResponse('用户名或密码错误')
 
