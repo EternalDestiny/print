@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>register</title>
+</head>
+<body>
+
+{% if v.errors %}
+    <p>
+        数据出错了，错误信息：{{ v.errors }}
+    </p>
+{% else %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ v.as_table }}
+        </table>
+        <input type="submit" value="提交">
+    </form>
+{% endif %}
+
+</body>
+</html>

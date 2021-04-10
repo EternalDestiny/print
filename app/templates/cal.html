@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>calculator</title>
+</head>
+<body>
+
+<form method="POST" action="/result/">
+    {% csrf_token %}
+    fist num<input type="number" name="valueA">
+    +
+    second num<input type="number" name="valueB">
+    <input type="submit" name="submit">
+</form>
+
+</body>
+</html>
