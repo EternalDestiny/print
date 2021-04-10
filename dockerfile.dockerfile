@@ -6,4 +6,4 @@ COPY requirements.txt /home/chen/app/
 RUN pip install -r /home/chen/app/requirements.txt
 RUN rm -rf /home/chen/app
 COPY . /home/chen/app
-CMD ["python","./manage.py","runserver","0.0.0.0:8000"]
+CMD ["python","./manage.py","runserver","0.0.0.0:80"]
