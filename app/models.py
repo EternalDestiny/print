@@ -2,12 +2,6 @@ from django.db import models
 
 
 # Create your models here.
-class Cal(models.Model):
-    value_a = models.CharField(max_length=10)
-    value_b = models.FloatField(max_length=10)
-    result = models.CharField(max_length=10)
-
-
 class Printer(models.Model):
     printer_id = models.CharField(max_length=100, primary_key=True)
     is_operational = models.CharField(max_length=10)

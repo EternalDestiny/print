@@ -3,11 +3,7 @@ from . import views
 
 urlpatterns = [
 
-    path('', views.getresponse),
-
-    # 计算
-    path('calpage/', views.calpage),
-    path('result/', views.calculate),
+    path('', views.index),
 
     # 打印机列表
     path('list/', views.printerlist),

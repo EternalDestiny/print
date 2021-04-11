@@ -1,33 +1,17 @@
 from django.shortcuts import render, redirect
 
-from app.models import Cal, Printer, GcodeFile, RegisteredPrinter
+from app.models import Printer, GcodeFile, RegisteredPrinter
 from django.http import FileResponse, JsonResponse, HttpResponse, Http404
 
 from app.form import PrinterForm
 
-# Create your views here.
 
-# def index(request):
-# return render(request,'index.html')
+# Create your views here.t
+
+def index(request):
+    return render(request, 'index.html')
 
 import os
-
-
-def calpage(request):
-    return render(request, 'cal.html')
-
-
-def calculate(request):
-    if request.POST:
-        value_a = request.POST['valueA']
-        value_b = request.POST['valueB']
-        result = int(value_a) + int(value_b)
-        Cal.objects.create(value_a=value_a, value_b=value_b, result=result)
-        return render(request, 'result.html', context={'data': result})
-    else:
-        return HttpResponse("please visit us with POST")
-
-
 def printerlist(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()
@@ -98,11 +82,6 @@ def delgcodedata(request):
             pass
         gcode_file_sel.delete()
     return redirect('/list/')
-
-
-def getresponse(request):
-    return render(request, 'getresponse.html')
-
 
 #
 def downloadindex(request):
