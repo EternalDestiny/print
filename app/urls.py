@@ -14,7 +14,7 @@ urlpatterns = [
     path('list/ajax/', views.printerlist_api),
     path('list/test/', views.printerlist_api),
     path('list/register_printer/', views.register_printer),
-    path('list/del_printer', views.del_printer),
+    path('list/del_printer/', views.del_printer),
 
     # 下载文件
     path('download/', views.downloadindex, name='download'),
