@@ -62,6 +62,11 @@
     {% endfor %}
 </table>
 
+<form action="register_printer/" method="get">
+    {% csrf_token %}
+    <input type="submit" value="注册打印机">
+</form>
+
 <form action="del_printer/" method="post">
     {% csrf_token %}
     <input type="text" name="printer_id">
