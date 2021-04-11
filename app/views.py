@@ -181,7 +181,7 @@ def print_gcode(request):
 
 def test(request):
     if request.method == 'POST':
-        if request.POST['shudown']:
+        if 'shutdown' in request.POST:
             Printer.objects.filter(printer_id=request.POST['printer_id']).update(
                 is_operational='False',
                 is_printing='False',
