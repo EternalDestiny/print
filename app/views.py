@@ -127,7 +127,6 @@ def download_gcode_file(request, filename):
     if request.method == 'GET':
         gcode_folder = os.path.join(os.getcwd(), "gcodefiles")
         file_path = os.path.join(gcode_folder, filename)
-
         try:
             f = open(file_path, 'rb')
             r = FileResponse(f, as_attachment=True, filename=filename)
@@ -182,48 +181,60 @@ def print_gcode(request):
 
 def test(request):
     if request.method == 'POST':
-        printer_state = request.POST
-        print('POST from', printer_state['printer_id'])
-
-        # 将打印机状态写入数据库
-        if RegisteredPrinter.objects.filter(printer_id=printer_state['printer_id']):
-            Printer.objects.filter(printer_id=printer_state['printer_id']).update(
-                is_operational=printer_state['is_operational'],
-                is_printing=printer_state['is_printing'],
-                is_cancelling=printer_state['is_cancelling'],
-                is_closed_or_error=printer_state['is_closed_or_error'],
-                is_paused=printer_state['is_paused'],
-                is_pausing=printer_state['is_pausing'],
-                is_ready=printer_state['is_ready'],
+        if request.POST['shudown']:
+            Printer.objects.filter(printer_id=request.POST['printer_id']).update(
+                is_operational='False',
+                is_printing='False',
+                is_cancelling='False',
+                is_closed_or_error='False',
+                is_paused='False',
+                is_pausing='False',
+                is_ready='False',
             )
+            return HttpResponse('goodbye')
         else:
-            return HttpResponse('打印机未注册')
+            printer_state = request.POST
+            print('POST from', printer_state['printer_id'])
 
-        # Printer.objects.all().delete()
+            # 将打印机状态写入数据库
+            if RegisteredPrinter.objects.filter(printer_id=printer_state['printer_id']):
+                Printer.objects.filter(printer_id=printer_state['printer_id']).update(
+                    is_operational=printer_state['is_operational'],
+                    is_printing=printer_state['is_printing'],
+                    is_cancelling=printer_state['is_cancelling'],
+                    is_closed_or_error=printer_state['is_closed_or_error'],
+                    is_paused=printer_state['is_paused'],
+                    is_pausing=printer_state['is_pausing'],
+                    is_ready=printer_state['is_ready'],
+                )
+            else:
+                return HttpResponse('打印机未注册')
 
-        try:
-            # 查询是否有需要打印的gcode
-            gcode_set = GcodeFile.objects.all()
-            gcode_id = gcode_set.values('gcode_id').get(gcode_selected='True')['gcode_id']
-            print("有文件需要打印")
-            gcode_path = gcode_set.values('gcode_safepath').get(gcode_selected='True')['gcode_safepath']
-            # print(gcode_path)
-            gcode_name = gcode_set.values('gcode_name').get(gcode_selected='True')['gcode_name']
-            # print(printer_state['is_operational'])
+            # Printer.objects.all().delete()
 
-            if printer_state['is_ready'] == 'True':
-                try:
-                    f = open(gcode_path, 'rb')
-                    r = FileResponse(f, as_attachment=True, filename=gcode_name)
-                    GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printed='True')
-                    GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='False')
-                    GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printer_id=printer_state['printer_id'])
-                    # 应该要remove
-                    print('123')
-                    return r
-                except Exception:
-                    return Http404('error')
-        except Exception:
-            return HttpResponse('recieved')
+            try:
+                # 查询是否有需要打印的gcode
+                gcode_set = GcodeFile.objects.all()
+                gcode_id = gcode_set.values('gcode_id').get(gcode_selected='True')['gcode_id']
+                print("有文件需要打印")
+                gcode_path = gcode_set.values('gcode_safepath').get(gcode_selected='True')['gcode_safepath']
+                # print(gcode_path)
+                gcode_name = gcode_set.values('gcode_name').get(gcode_selected='True')['gcode_name']
+                # print(printer_state['is_operational'])
+
+                if printer_state['is_ready'] == 'True':
+                    try:
+                        f = open(gcode_path, 'rb')
+                        r = FileResponse(f, as_attachment=True, filename=gcode_name)
+                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printed='True')
+                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='False')
+                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printer_id=printer_state['printer_id'])
+                        # 应该要remove
+                        print('123')
+                        return r
+                    except Exception:
+                        return Http404('error')
+            except Exception:
+                return HttpResponse('recieved')
     if request.GET:
         pass
