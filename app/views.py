@@ -62,7 +62,7 @@ def register_printer(request):
             return render(request, 'register_printer.html', locals())
 
 def del_printer(request):
-    if request.method == 'PSOT':
+    if request.method == 'POST':
         printer_sel = RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id'])
         printer_sel.delete()
         return redirect('/list/')
