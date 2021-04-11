@@ -52,15 +52,21 @@
 
         </tr>
     </thread>
-        {% for printer in printer %}
+    {% for printer in printer %}
         <tr>
-        <td>{{ printer.printer_id }}</td>
-        <td>{{ printer.owner }}</td>
-        <td>{{ printer.address }}</td>
+            <td>{{ printer.printer_id }}</td>
+            <td>{{ printer.owner }}</td>
+            <td>{{ printer.address }}</td>
 
         </tr>
-        {% endfor %}
+    {% endfor %}
 </table>
+
+<form action="del_printer/" method="post">
+    {% csrf_token %}
+    <input type="text" name="printer_id">
+    <input type="submit" value="删除打印机">
+</form>
 
 {#<form action="delprinterdata/" method="POST">#}
 {#    {% csrf_token %}#}
@@ -93,17 +99,17 @@
             <th>gcode_printer_id</th>
         </tr>
     </thread>
-        {% for gcode in gcode %}
+    {% for gcode in gcode %}
         <tr>
-        <td>{{ gcode.gcode_id }}</td>
-        <td>{{ gcode.gcode_name }}</td>
-        <td>{{ gcode.gcode_url }}</td>
-        <td>{{ gcode.gcode_safepath }}</td>
-        <td>{{ gcode.gcode_printed }}</td>
-        <td>{{ gcode.gcode_selected }}</td>
-        <td>{{ gcode.gcode_printer_id }}</td>
+            <td>{{ gcode.gcode_id }}</td>
+            <td>{{ gcode.gcode_name }}</td>
+            <td>{{ gcode.gcode_url }}</td>
+            <td>{{ gcode.gcode_safepath }}</td>
+            <td>{{ gcode.gcode_printed }}</td>
+            <td>{{ gcode.gcode_selected }}</td>
+            <td>{{ gcode.gcode_printer_id }}</td>
         </tr>
-        {% endfor %}
+    {% endfor %}
 </table>
 
 <form action="delgcodedata/" method="POST">
