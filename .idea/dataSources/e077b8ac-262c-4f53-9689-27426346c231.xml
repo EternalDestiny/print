@@ -369,9 +369,9 @@
     <package id="167" parent="1" name="json_tree"/>
     <package id="168" parent="1" name="rtree"/>
     <package id="169" parent="1" name="rtree_i32"/>
-    <table id="170" parent="2" name="app_cal"/>
-    <table id="171" parent="2" name="app_gcodefile"/>
-    <table id="172" parent="2" name="app_printer"/>
+    <table id="170" parent="2" name="app_gcodefile"/>
+    <table id="171" parent="2" name="app_printer"/>
+    <table id="172" parent="2" name="app_registeredprinter"/>
     <table id="173" parent="2" name="auth_group"/>
     <table id="174" parent="2" name="auth_group_permissions"/>
     <table id="175" parent="2" name="auth_permission"/>
@@ -1346,112 +1346,113 @@
     <argument id="504" parent="159">
       <Position>1</Position>
     </argument>
-    <column id="505" parent="170" name="id">
+    <column id="505" parent="170" name="gcode_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="506" parent="170" name="value_a">
-      <Position>2</Position>
-      <DataType>varchar(10)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="507" parent="170" name="value_b">
-      <Position>3</Position>
-      <DataType>real|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="508" parent="170" name="result">
-      <Position>4</Position>
-      <DataType>varchar(10)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <key id="509" parent="170">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="510" parent="171" name="gcode_id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="511" parent="171" name="gcode_name">
+    <column id="506" parent="170" name="gcode_name">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="512" parent="171" name="gcode_url">
+    <column id="507" parent="170" name="gcode_url">
       <Position>3</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="513" parent="171" name="gcode_safepath">
+    <column id="508" parent="170" name="gcode_safepath">
       <Position>4</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="514" parent="171" name="gcode_printed">
+    <column id="509" parent="170" name="gcode_printed">
       <Position>5</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="515" parent="171" name="gcode_selected">
+    <column id="510" parent="170" name="gcode_selected">
       <Position>6</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="516" parent="171" name="gcode_printer_id">
+    <column id="511" parent="170" name="gcode_printer_id">
       <Position>7</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="517" parent="171">
+    <key id="512" parent="170">
       <ColNames>gcode_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="518" parent="172" name="printer_id">
+    <column id="513" parent="171" name="printer_id">
       <Position>1</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="519" parent="172" name="is_operational">
+    <column id="514" parent="171" name="is_operational">
       <Position>2</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="520" parent="172" name="is_printing">
+    <column id="515" parent="171" name="is_printing">
       <Position>3</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="521" parent="172" name="is_cancelling">
+    <column id="516" parent="171" name="is_cancelling">
       <Position>4</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="522" parent="172" name="is_closed_or_error">
+    <column id="517" parent="171" name="is_closed_or_error">
       <Position>5</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="523" parent="172" name="is_paused">
+    <column id="518" parent="171" name="is_paused">
       <Position>6</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="524" parent="172" name="is_pausing">
+    <column id="519" parent="171" name="is_pausing">
       <Position>7</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="525" parent="172" name="is_ready">
+    <column id="520" parent="171" name="is_ready">
       <Position>8</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="526" parent="172" name="sqlite_autoindex_app_printer_1">
+    <index id="521" parent="171" name="sqlite_autoindex_app_printer_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>printer_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="522" parent="171">
+      <ColNames>printer_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_app_printer_1</UnderlyingIndexName>
+    </key>
+    <column id="523" parent="172" name="printer_id">
+      <Position>1</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="524" parent="172" name="owner">
+      <Position>2</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="525" parent="172" name="address">
+      <Position>3</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="526" parent="172" name="sqlite_autoindex_app_registeredprinter_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>printer_id</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -1460,7 +1461,7 @@
     <key id="527" parent="172">
       <ColNames>printer_id</ColNames>
       <Primary>1</Primary>
-      <UnderlyingIndexName>sqlite_autoindex_app_printer_1</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_app_registeredprinter_1</UnderlyingIndexName>
     </key>
     <column id="528" parent="173" name="id">
       <Position>1</Position>

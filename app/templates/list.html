@@ -7,41 +7,40 @@
 
 <body>
 
-{#<script>#}
-{#         function reurl(){#}
-{#             url = location.href;#}
-{#             var times = url.split("?t=");#}
-{#             if(times[1] != 1){#}
-{#                 url += "?t=1";#}
+{#    <form action="/api/ajax/" method="get">#}
 {##}
-{#                 self.location.replace(url);#}
-{#             }#}
-{#         }#}
-{#         window.onload = function() {#}
-{#             setTimeout("reurl()", 100);#}
-{#         }#}
-{#</script>#}
+{#        <p>pritner_id:<span id="pritner_id" style="color: blueviolet;"></span></p>#}
+{##}
+{#        <p>owner:<span id="owner"></span></p>#}
+{##}
+{#        <p>address:<span id="address"></span></p>#}
+{##}
+{#        <button type="button" id="get_printer"></button>#}
+{##}
+{#    </form>#}
+
 
 <script>
-    window.setInterval(myFunction, 1000 * 5);
-    var i = 1;
+    window.setInterval(myFunction, 1000 * 2);
 
     var httpRequest = new XMLHttpRequest();
 
     function myFunction() {
-        console.log("轮询任务=================>" + i++);
 
         httpRequest.open("get", "ajax/");
         httpRequest.send(null);
-        httpRequest.responseType = "json";
+        {#httpRequest.responseType = "json"#}
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                 var json = httpRequest.responseText;
+                document.getElementById("printer_id").innerHTML = json
                 console.log(json);
             }
         };
     }
+
 </script>
+
 
 <table border="1">
     <thread>
@@ -61,6 +60,9 @@
         </tr>
     {% endfor %}
 </table>
+
+打印机状态：
+<div id="printer_id"></div>
 
 <form action="register_printer/" method="get">
     {% csrf_token %}
@@ -85,7 +87,7 @@
 {##}
 {#</form>>#}
 
-<form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
+<form enctype="multipart/form-data" action="upload_gcode_file/" method="post">
     {% csrf_token %}
     <input type="file" name="gcode_file"/>
     <br>
@@ -97,8 +99,8 @@
         <tr>
             <th>gcode_id</th>
             <th>gcode_name</th>
-            <th>gcode_url</th>
-            <th>gcode_safepath</th>
+            {#            <th>gcode_url</th>#}
+            {#            <th>gcode_safepath</th>#}
             <th>gcode_printed</th>
             <th>gcode_selected</th>
             <th>gcode_printer_id</th>
@@ -108,8 +110,8 @@
         <tr>
             <td>{{ gcode.gcode_id }}</td>
             <td>{{ gcode.gcode_name }}</td>
-            <td>{{ gcode.gcode_url }}</td>
-            <td>{{ gcode.gcode_safepath }}</td>
+            {#            <td>{{ gcode.gcode_url }}</td>#}
+            {#            <td>{{ gcode.gcode_safepath }}</td>#}
             <td>{{ gcode.gcode_printed }}</td>
             <td>{{ gcode.gcode_selected }}</td>
             <td>{{ gcode.gcode_printer_id }}</td>
@@ -117,15 +119,24 @@
     {% endfor %}
 </table>
 
-<form action="delgcodedata/" method="POST">
+{#<form action="delgcodedata/" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="number" name="gcode_id">#}
+{#    <input type="submit" value="delete_gcode">#}
+{#</form>#}
+<form action="delgcodedata/" method="GET">
     {% csrf_token %}
-    <input type="number" name="gcode_id">
     <input type="submit" value="delete_gcode">
 </form>
 
-<form action="printgcode/" method="POST">
+{#<form action="printgcode/" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="number" name="gcode_id">#}
+{#    <input type="submit" value="print_gcode">#}
+{#</form>#}
+
+<form action="printgcode/" method="GET">
     {% csrf_token %}
-    <input type="number" name="gcode_id">
     <input type="submit" value="print_gcode">
 </form>
 
