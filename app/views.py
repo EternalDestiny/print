@@ -101,6 +101,7 @@ def delgcodedata(request):
         if GcodeFile.objects.filter(gcode_id=request.POST['gcode_id']):
             gcode_file_sel = GcodeFile.objects.get(gcode_id=request.POST['gcode_id'])
             gcode_path = model_to_dict(gcode_file_sel)['gcode_safepath']
+            gcode_file_sel.delete()
             try:
                 os.remove(gcode_path)
             except Exception:
