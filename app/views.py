@@ -106,7 +106,6 @@ def delgcodedata(request):
                 os.remove(gcode_path)
             except Exception:
                 return redirect('/list/')
-            gcode_file_sel.delete()
             return redirect('/list/')
         else:
             return redirect('/list/')
