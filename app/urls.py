@@ -23,6 +23,7 @@ urlpatterns = [
     path('test/', views.test, name='test'),
 
     # develop
-    path('list/admin/del_alldata/', views.del_alldata)
+    path('develop/del_alldata/', views.del_alldata),
+    path('develop/printer_state/', views.get_printer_state),
 
 ]

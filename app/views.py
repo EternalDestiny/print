@@ -84,11 +84,7 @@ def printerlist_api(request):
         return JsonResponse(printer_list)
 
 
-def del_alldata(request):
-    Printer.objects.all().delete()
-    RegisteredPrinter.objects.all().delete()
-    GcodeFile.objects.all().delete()
-    return HttpResponse('数据库文件已删除')
+
 
 
 def delprinterdata(request):
@@ -181,8 +177,10 @@ def print_gcode(request):
 
 def test(request):
     if request.method == 'POST':
-        if 'shutdown' in request.POST:
-            Printer.objects.filter(printer_id=request.POST['printer_id']).update(
+        printer_data = request.POST
+        if 'shutdown' in printer_data:
+            # if RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id']):
+            Printer.objects.filter(printer_id=printer_data['printer_id']).update(
                 is_operational='False',
                 is_printing='False',
                 is_cancelling='False',
@@ -192,49 +190,60 @@ def test(request):
                 is_ready='False',
             )
             return HttpResponse('goodbye')
+        elif 'startup' in printer_data:
+            print('connect from ', printer_data['plugin_id'])
+            return HttpResponse('welcome')
         else:
-            printer_state = request.POST
-            print('POST from', printer_state['printer_id'])
-
-            # 将打印机状态写入数据库
-            if RegisteredPrinter.objects.filter(printer_id=printer_state['printer_id']):
-                Printer.objects.filter(printer_id=printer_state['printer_id']).update(
-                    is_operational=printer_state['is_operational'],
-                    is_printing=printer_state['is_printing'],
-                    is_cancelling=printer_state['is_cancelling'],
-                    is_closed_or_error=printer_state['is_closed_or_error'],
-                    is_paused=printer_state['is_paused'],
-                    is_pausing=printer_state['is_pausing'],
-                    is_ready=printer_state['is_ready'],
-                )
-            else:
+            if not RegisteredPrinter.objects.filter(printer_id=printer_data['printer_id']):
                 return HttpResponse('打印机未注册')
+            else:
+                Printer.objects.filter(printer_id=printer_data['printer_id']).update(
+                    is_operational=printer_data['is_operational'],
+                    is_printing=printer_data['is_printing'],
+                    is_cancelling=printer_data['is_cancelling'],
+                    is_closed_or_error=printer_data['is_closed_or_error'],
+                    is_paused=printer_data['is_paused'],
+                    is_pausing=printer_data['is_pausing'],
+                    is_ready=printer_data['is_ready'],
+                )
+                print('POST from', printer_data['printer_id'])
+                try:
+                    # 查询是否有需要打印的gcode
+                    gcode_set = GcodeFile.objects.all()
+                    gcode_id = gcode_set.values('gcode_id').get(gcode_selected='True')['gcode_id']
+                    print("有文件需要打印")
+                    gcode_path = gcode_set.values('gcode_safepath').get(gcode_selected='True')['gcode_safepath']
+                    # print(gcode_path)
+                    gcode_name = gcode_set.values('gcode_name').get(gcode_selected='True')['gcode_name']
+                    # print(printer_state['is_operational'])
 
-            # Printer.objects.all().delete()
-
-            try:
-                # 查询是否有需要打印的gcode
-                gcode_set = GcodeFile.objects.all()
-                gcode_id = gcode_set.values('gcode_id').get(gcode_selected='True')['gcode_id']
-                print("有文件需要打印")
-                gcode_path = gcode_set.values('gcode_safepath').get(gcode_selected='True')['gcode_safepath']
-                # print(gcode_path)
-                gcode_name = gcode_set.values('gcode_name').get(gcode_selected='True')['gcode_name']
-                # print(printer_state['is_operational'])
-
-                if printer_state['is_ready'] == 'True':
-                    try:
-                        f = open(gcode_path, 'rb')
-                        r = FileResponse(f, as_attachment=True, filename=gcode_name)
-                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printed='True')
-                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='False')
-                        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printer_id=printer_state['printer_id'])
-                        # 应该要remove
-                        print('123')
-                        return r
-                    except Exception:
-                        return Http404('error')
-            except Exception:
-                return HttpResponse('recieved')
+                    if printer_data['is_ready'] == 'True':
+                        try:
+                            f = open(gcode_path, 'rb')
+                            r = FileResponse(f, as_attachment=True, filename=gcode_name)
+                            GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printed='True')
+                            GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='False')
+                            GcodeFile.objects.filter(gcode_id=gcode_id).update(
+                                gcode_printer_id=printer_data['printer_id'])
+                            # 应该要remove
+                            return r
+                        except Exception:
+                            return Http404('error')
+                except Exception:
+                    return HttpResponse('recieved')
     if request.GET:
         pass
+
+
+# develop
+def del_alldata(request):
+    Printer.objects.all().delete()
+    RegisteredPrinter.objects.all().delete()
+    GcodeFile.objects.all().delete()
+    return HttpResponse('数据库文件已删除')
+
+
+def get_printer_state(request):
+    if request.method == 'GET':
+        printer_state = Printer.objects.all()
+        return render(request, 'develop.html', context={'printer_state': printer_state})
