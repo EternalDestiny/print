@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>develop</title>
+</head>
+<body>
+
+<script>
+    window.setInterval(myFunction, 1000 * 5);
+
+    function myFunction() {
+        window.location.reload();
+    }
+
+</script>
+
+<table border="1">
+    <thread>
+        <tr>
+            <th>printer_id</th>
+            <th>is_operational</th>
+            <th>is_printing</th>
+            <th>is_cancelling</th>
+            <th>is_closed_or_error</th>
+            <th>is_paused</th>
+            <th>is_pausing</th>
+            <th>is_ready</th>
+        </tr>
+    </thread>
+    {% for printer in printer_state %}
+        <tr>
+            <td>{{ printer.printer_id }}</td>
+            <td>{{ printer.is_operational }}</td>
+            <td>{{ printer.is_printing }}</td>
+            <td>{{ printer.is_cancelling }}</td>
+            <td>{{ printer.is_closed_or_error }}</td>
+            <td>{{ printer.is_paused }}</td>
+            <td>{{ printer.is_pausing }}</td>
+            <td>{{ printer.is_ready }}</td>
+
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
