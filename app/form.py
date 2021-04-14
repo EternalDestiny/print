@@ -1,5 +1,5 @@
 from django import forms
-from .models import RegisteredPrinter
+from .models import RegisteredPrinter, Printer, GcodeFile
 
 
 class PrinterForm(forms.ModelForm):
@@ -19,3 +19,7 @@ class PrinterForm(forms.ModelForm):
         error_messages = {
             '__all__': {'required': '请输入内容', 'invalid': '请检查输入内容'},
         }
+
+# class PrinterStateForm(forms.ModelForm):
+#     class Meta:
+#         model

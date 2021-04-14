@@ -79,6 +79,7 @@ def printerlist_api(request):
                 state = '离线'
             printer_list[p.printer_id] = state
         return JsonResponse(printer_list, json_dumps_params={'ensure_ascii': False})
+        # return JsonResponse({'chen':'chen'})
 
     if request.method == 'POST':
         return JsonResponse(printer_list)
@@ -233,6 +234,10 @@ def test(request):
                     return HttpResponse('recieved')
     if request.GET:
         pass
+
+
+def test_session(request):
+    return HttpResponse("hello")
 
 
 # develop

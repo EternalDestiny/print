@@ -1,40 +1,101 @@
-from django.shortcuts import render, HttpResponse, redirect
-from users import models
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
 
-# Create your views here.
-def login(request):
-    if request.method == 'GET':
-        return render(request, 'login.html')
+
+# 用户注册
+def registerView(request):
+    # 设置模版上下文
+    title = '注册'
+    pageTitle = '用户注册'
     if request.method == 'POST':
-        username = request.POST.get('请输入用户名')
-        password = request.POST.get('请输入密码')
-        user_obj = models.User.objects.filter(username=username, password=password).first()
-        if user_obj:
-            return redirect('/list/')
+        u = request.POST.get('username', '')
+        p = request.POST.get('password', '')
+        if User.objects.filter(username=u):
+            tips = '用户已存在'
         else:
-            return HttpResponse('用户名或密码错误')
+            d = dict(username=u, password=p, is_staff=1, is_superuser=1)
+            user = User.objects.create_user(**d)
+            user.save()
+            tips = '注册成功，请登录'
+    return render(request, 'user.html', locals())
 
-def register(request):
-    if request.method == 'GET':
-        return render(request, 'register.html')
+
+# 用户登录
+def loginView(request):
+    # 设置模版上下文
+    title = '登录'
+    pageTitle = '用户登录'
     if request.method == 'POST':
-        username = request.POST["请输入用户名"]
-        password = request.POST["请输入密码"]
-        repeat_password = request.POST["请输入确认密码"]
-        if not username:
-            return HttpResponse('用户名不能为空')
-        if not password:
-            return HttpResponse('密码不能为空')
-        if not repeat_password:
-            return HttpResponse('确认密码不能为空')
-        if username and password and repeat_password:
-            if password == repeat_password:
-                # filter() 函数用于过滤序列，过滤掉不符合条件的元素，返回由符合条件元素组成的新列表
-                user_project = models.User.objects.filter(username=username).first()
-                if user_project:
-                    return HttpResponse('用户名已存在')
-                else:
-                    models.User.objects.create(username=username, password=password).save()
-                    return redirect('/login/')
+        u = request.POST.get('username', '')
+        p = request.POST.get('password', '')
+        if User.objects.filter(username=u):
+            user = authenticate(username=u, password=p)
+            if user:
+                if user.is_active:
+                    login(request, user)
+                return HttpResponse('登录成功')
             else:
-                return HttpResponse('两次输入的密码不一致')
+                tips = '账号密码错误，请重新输入'
+        else:
+            tips = '用户不存在，请注册'
+    return render(request, 'user.html', locals())
+
+
+# 修改密码
+def setpsView(request):
+    # 设置模版上下文
+    title = '修改密码'
+    pageTitle = '修改密码'
+    password2 = True
+    if request.method == 'POST':
+        u = request.POST.get('username', '')
+        p = request.POST.get('password', '')
+        p2 = request.POST.get('password2', '')
+        if User.objects.filter(username=u):
+            user = authenticate(username=u, password=p)
+            # 判断用户的账号密码是否正确
+            if user:
+                user.set_password(p2)
+                user.save()
+                tips = '密码修改成功'
+            else:
+                tips = '原始密码不正确'
+        else:
+            tips = '用户不存在'
+    return render(request, 'user.html', locals())
+
+
+# 使用make_password实现密码修改
+from django.contrib.auth.hashers import make_password
+
+
+def setpsView2(request):
+    # 设置模版上下文
+    title = '修改密码'
+    pageTitle = '修改密码'
+    password2 = True
+    if request.method == 'POST':
+        u = request.POST.get('username', '')
+        p = request.POST.get('password', '')
+        p2 = request.POST.get('password2', '')
+        # 判断用户是否存在
+        user = User.objects.filter(username=u)
+        if User.objects.filter(username=u):
+            user = authenticate(username=u, password=p)
+            # 判断用户的账号密码是否正确
+            if user:
+                # 密码加密处理并保存到数据库
+                dj_ps = make_password(p2, None, 'pbkdf2_sha256')
+                user.password = dj_ps
+                user.save()
+            else:
+                print('原始密码不正确')
+    return render(request, 'user.html', locals())
+
+
+# 用户注销，退出登录
+def logoutView(request):
+    logout(request)
+    return HttpResponse('注销成功')

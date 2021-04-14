@@ -7,18 +7,6 @@
 
 <body>
 
-{#    <form action="/api/ajax/" method="get">#}
-{##}
-{#        <p>pritner_id:<span id="pritner_id" style="color: blueviolet;"></span></p>#}
-{##}
-{#        <p>owner:<span id="owner"></span></p>#}
-{##}
-{#        <p>address:<span id="address"></span></p>#}
-{##}
-{#        <button type="button" id="get_printer"></button>#}
-{##}
-{#    </form>#}
-
 
 <script>
     window.setInterval(myFunction, 1000 * 2);
@@ -26,15 +14,15 @@
     var httpRequest = new XMLHttpRequest();
 
     function myFunction() {
-
         httpRequest.open("get", "ajax/");
         httpRequest.send(null);
         {#httpRequest.responseType = "json"#}
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-                var json = httpRequest.responseText;
+                var json = httpRequest.response;
                 document.getElementById("printer_id").innerHTML = json
-                console.log(json);
+                {#console.log(json)#}
+
             }
         };
     }
