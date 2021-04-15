@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 
 
@@ -15,7 +16,7 @@ def registerView(request):
         if User.objects.filter(username=u):
             tips = '用户已存在'
         else:
-            d = dict(username=u, password=p, is_staff=1, is_superuser=1)
+            d = dict(username=u, password=p, is_staff=0, is_superuser=0)
             user = User.objects.create_user(**d)
             user.save()
             tips = '注册成功，请登录'
@@ -28,8 +29,8 @@ def loginView(request):
     title = '登录'
     pageTitle = '用户登录'
     if request.method == 'POST':
-        u = request.POST.get('username', '')
         p = request.POST.get('password', '')
+        u = request.POST.get('username', '')
         if User.objects.filter(username=u):
             user = authenticate(username=u, password=p)
             if user:

@@ -5,6 +5,7 @@ from django.http import FileResponse, JsonResponse, HttpResponse, Http404
 from app.form import PrinterForm
 from django.forms.models import model_to_dict
 
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.t
 
@@ -15,6 +16,7 @@ def index(request):
 import os
 
 
+@login_required
 def printerlist(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()
