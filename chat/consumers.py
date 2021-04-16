@@ -17,4 +17,4 @@ class ChatConsumer(WebsocketConsumer):
         #     'message': message
         # }))
 
-        self.send(text_data=json.loads(text_data))
+        self.send(text_data=text_data)
