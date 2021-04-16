@@ -32,8 +32,8 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
 
-    # 'chat',
-    # 'channels',
+    'chat',
+    'channels',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -136,7 +136,7 @@ STATIC_URL = '/static/'
 
 # print/settings.py
 # Channels
-#
+ASGI_APPLICATION = 'print.asgi.application'
 
 # login
 LOGIN_URL = '/login.html'
