@@ -20,7 +20,7 @@ urlpatterns = [
     path('list/delgcodedata/', views.delgcodedata, name='delete'),
     path('list/printgcode/', views.print_gcode, name='print'),
 
-    path('test/', views.test, name='test'),
+    # path('test/', views.test, name='test'),
 
     # develop
     path('develop/del_alldata/', views.del_alldata),
