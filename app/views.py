@@ -16,7 +16,7 @@ def index(request):
 import os
 
 
-@login_required
+# @login_required
 def printerlist(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()
