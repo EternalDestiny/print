@@ -150,9 +150,11 @@ def upload_gcode_file(request):
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
 
+        # server='http://127.0.0.1:8000'
+        server = 'http://49.234.134.71'
         GcodeFile.objects.get_or_create(
             gcode_name=gcode_file_re.name,
-            gcode_url='/download_gcode_file/' + gcode_file_re.name,
+            gcode_url=server + '/download_gcode_file/' + gcode_file_re.name,
             gcode_safepath=gcode_path,
             gcode_printed='False',
             gcode_selected='False',
