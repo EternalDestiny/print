@@ -27,6 +27,9 @@ class GcodeFile(models.Model):
     gcode_name = models.CharField(max_length=100)
     gcode_url = models.URLField(max_length=100)
     gcode_safepath = models.CharField(max_length=100)
-    gcode_printed = models.CharField(max_length=10)
-    gcode_selected = models.CharField(max_length=10)
-    gcode_printer_id = models.CharField(max_length=100, blank=True)
+
+    gcode_printed = models.BooleanField(default=False)
+    gcode_selected = models.BooleanField(default=False)
+    gcode_printing = models.BooleanField(default=False)
+
+    gcode_printer_id = models.CharField(max_length=100, blank=True, null=True, default='no')

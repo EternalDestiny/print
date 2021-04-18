@@ -1,6 +1,5 @@
 from django import forms
-from .models import RegisteredPrinter, Printer, GcodeFile
-
+from .models import RegisteredPrinter
 
 class PrinterForm(forms.ModelForm):
     class Meta:

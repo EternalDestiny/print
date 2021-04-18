@@ -12,16 +12,28 @@
     window.setInterval(myFunction, 1000 * 2);
 
     var httpRequest = new XMLHttpRequest();
+    var print = new XMLHttpRequest();
+
 
     function myFunction() {
-        httpRequest.open("get", "ajax/");
+        httpRequest.open("get", "ajax_printer_state/");
+        print.open("get", "ajax_print_event/");
         httpRequest.send(null);
+        print.send(null)
         {#httpRequest.responseType = "json"#}
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                 var json = httpRequest.response;
                 document.getElementById("printer_id").innerHTML = json
                 {#console.log(json)#}
+
+            }
+        };
+        print.onreadystatechange = function () {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                var json_print = print.response;
+                document.getElementById("print_id").innerHTML = json_print
+                {#console.log(json_print)#}
 
             }
         };
@@ -89,6 +101,7 @@
             <th>gcode_name</th>
             {#            <th>gcode_url</th>#}
             {#            <th>gcode_safepath</th>#}
+            <th>gcode_printing</th>
             <th>gcode_printed</th>
             <th>gcode_selected</th>
             <th>gcode_printer_id</th>
@@ -100,6 +113,7 @@
             <td>{{ gcode.gcode_name }}</td>
             {#            <td>{{ gcode.gcode_url }}</td>#}
             {#            <td>{{ gcode.gcode_safepath }}</td>#}
+            <td>{{ gcode.gcode_printing }}</td>
             <td>{{ gcode.gcode_printed }}</td>
             <td>{{ gcode.gcode_selected }}</td>
             <td>{{ gcode.gcode_printer_id }}</td>
@@ -127,6 +141,9 @@
     {% csrf_token %}
     <input type="submit" value="print_gcode">
 </form>
+
+打印机进度：
+<div id="print_id"></div>
 
 </body>
 </html>
