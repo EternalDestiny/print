@@ -55,6 +55,7 @@ class PrinterConsumer(WebsocketConsumer):
                                              command='print',
                                              data=model_to_dict(gcode_sel)
                                              )
+
                     # 更新print数据库和gcode数据库
                     gcode_sel.gcode_printer_id = printer_aval.printer_id
                     gcode_sel.save()
@@ -99,8 +100,3 @@ class PrinterConsumer(WebsocketConsumer):
         if octoprint_event.get('event_type') == 'PrintDone':
             gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
             gcode_file.update(gcode_printed=True)
-
-# GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_printed='True')
-# GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='False')
-# GcodeFile.objects.filter(gcode_id=gcode_id).update(
-#    gcode_printer_id=printer_state['printer_id'])

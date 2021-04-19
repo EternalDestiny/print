@@ -53,6 +53,23 @@ def register_printer(request):
             return render(request, 'register_printer.html', locals())
 
 
+def register_printer_plugin(request):
+    if request.method == 'POST':
+        data = request.POST
+        printer_id = data.get('printer_id')
+        owner = data.get('owner')
+        address = data.get('address')
+        if printer_id and owner and address:
+            if RegisteredPrinter.objects.filter(printer_id=printer_id):
+                return HttpResponse('already')
+            else:
+                RegisteredPrinter.objects.get_or_create(printer_id=printer_id, owner=owner, address=address)
+                Printer.objects.get_or_create(printer_id=printer_id)
+                return HttpResponse('success')
+        else:
+            return HttpResponse('fail')
+
+
 def del_printer(request):
     if request.method == 'POST':
         RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id']).delete()
@@ -161,8 +178,11 @@ def upload_gcode_file(request):
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
 
-        # server = 'http://127.0.0.1:8000'
-        server = 'http://49.234.134.71'
+        develop = False
+        if develop:
+            server = 'http://127.0.0.1:8000'
+        else:
+            server = 'http://49.234.134.71'
 
         GcodeFile.objects.get_or_create(
             gcode_name=gcode_file_re.name,
@@ -201,10 +221,12 @@ def del_alldata(request):
     return HttpResponse('数据库文件已删除')
 
 
-def get_printer_state(request):
+def get_all_model(request):
     if request.method == 'GET':
         printer_state = Printer.objects.all()
-        return render(request, 'develop.html', context={'printer_state': printer_state})
+        gcodefile = GcodeFile.objects.all()
+        print_job = Print.objects.all()
+        return render(request, 'develop.html', locals())
 
 
 def delprinterdata(request):

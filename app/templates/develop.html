@@ -31,13 +31,62 @@
     {% for printer in printer_state %}
         <tr>
             <td>{{ printer.printer_id }}</td>
-            <td>{{ printer.is_operational }}</td>
-            <td>{{ printer.is_printing }}</td>
-            <td>{{ printer.is_cancelling }}</td>
-            <td>{{ printer.is_closed_or_error }}</td>
-            <td>{{ printer.is_paused }}</td>
-            <td>{{ printer.is_pausing }}</td>
-            <td>{{ printer.is_ready }}</td>
+            <td>{{ printer.operational }}</td>
+            <td>{{ printer.printing }}</td>
+            <td>{{ printer.cancelling }}</td>
+            <td>{{ printer.closedOrError }}</td>
+            <td>{{ printer.paused }}</td>
+            <td>{{ printer.pausing }}</td>
+            <td>{{ printer.ready }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<table border="1">
+    <thread>
+        <tr>
+            <th>gcode_id</th>
+            <th>gcode_name</th>
+            <th>gcode_url</th>
+            <th>gcode_safepath</th>
+            <th>gcode_printed</th>
+            <th>gcode_selected</th>
+            <th>gcode_printing</th>
+            <th>gcode_printer_id</th>
+        </tr>
+    </thread>
+    {% for gcodefile in gcodefile %}
+        <tr>
+            <td>{{ gcodefile.gcode_id }}</td>
+            <td>{{ gcodefile.gcode_name }}</td>
+            <td>{{ gcodefile.gcode_url }}</td>
+            <td>{{ gcodefile.gcode_safepath }}</td>
+            <td>{{ gcodefile.gcode_printed }}</td>
+            <td>{{ gcodefile.gcode_selected }}</td>
+            <td>{{ gcodefilegcode_printing }}</td>
+            <td>{{ gcodefile.gcode_printer_id }}</td>
+
+        </tr>
+    {% endfor %}
+</table>
+
+<table border="1">
+    <thread>
+        <tr>
+            <th>estimatedPrintTime</th>
+            <th>averagePrintTime</th>
+            <th>completion</th>
+            <th>printTime</th>
+            <th>printTimeLeft</th>
+        </tr>
+    </thread>
+    {% for print_job in print_job %}
+        <tr>
+            <td>{{ print_job.estimatedPrintTime }}</td>
+            <td>{{ print_job.averagePrintTime }}</td>
+            <td>{{ print_job.completion }}</td>
+            <td>{{ print_job.printTime }}</td>
+            <td>{{ print_job.printTimeLeft }}</td>
 
         </tr>
     {% endfor %}

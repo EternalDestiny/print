@@ -1,5 +1,7 @@
 from django import forms
-from .models import RegisteredPrinter
+from .models import RegisteredPrinter, GcodeFile
+from chat.models import Print, Printer
+
 
 class PrinterForm(forms.ModelForm):
     class Meta:
@@ -21,4 +23,11 @@ class PrinterForm(forms.ModelForm):
 
 # class PrinterStateForm(forms.ModelForm):
 #     class Meta:
-#         model
+#         model = Printer
+#         fields = '__all__'
+#
+#
+# class GcodeFileForm(forms.ModelForm):
+#     class Meta:
+#         model = GcodeFile
+#         fields = '__all__'
