@@ -1,5 +1,5 @@
 from django.db import models
-
+from chat.models import Printer
 
 # Create your models here.
 # class Printer(models.Model):

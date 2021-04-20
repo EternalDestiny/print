@@ -9,4 +9,5 @@ from . import consumers
 
 websocket_urlpatterns = [
     path('ws/printer/', consumers.PrinterConsumer.as_asgi()),
+    path('ws', consumers.PrintConsumer.as_asgi()),
 ]

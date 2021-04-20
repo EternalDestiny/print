@@ -16,8 +16,8 @@
 
 
     function myFunction() {
-        httpRequest.open("get", "ajax_printer_state/");
-        print.open("get", "ajax_print_event/");
+        httpRequest.open("get", "/ajax_printer_state/");
+        print.open("get", "/ajax_print_event/");
         httpRequest.send(null);
         print.send(null)
         {#httpRequest.responseType = "json"#}
@@ -64,12 +64,12 @@
 打印机状态：
 <div id="printer_id"></div>
 
-<form action="register_printer/" method="get">
+<form action="/register_printer/" method="get">
     {% csrf_token %}
     <input type="submit" value="注册打印机">
 </form>
 
-<form action="del_printer/" method="post">
+<form action="/del_printer/" method="post">
     {% csrf_token %}
     <input type="text" name="printer_id">
     <input type="submit" value="删除打印机">
@@ -87,7 +87,7 @@
 {##}
 {#</form>>#}
 
-<form enctype="multipart/form-data" action="upload_gcode_file/" method="post">
+<form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
     {% csrf_token %}
     <input type="file" name="gcode_file"/>
     <br>
@@ -126,7 +126,7 @@
 {#    <input type="number" name="gcode_id">#}
 {#    <input type="submit" value="delete_gcode">#}
 {#</form>#}
-<form action="delgcodedata/" method="GET">
+<form action="/delgcodedata/" method="GET">
     {% csrf_token %}
     <input type="submit" value="delete_gcode">
 </form>
@@ -137,7 +137,7 @@
 {#    <input type="submit" value="print_gcode">#}
 {#</form>#}
 
-<form action="printgcode/" method="GET">
+<form action="/printgcode/" method="GET">
     {% csrf_token %}
     <input type="submit" value="print_gcode">
 </form>

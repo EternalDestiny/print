@@ -178,7 +178,7 @@ def upload_gcode_file(request):
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
 
-        develop = False
+        develop = True
         if develop:
             server = 'http://127.0.0.1:8000'
         else:
@@ -232,3 +232,10 @@ def get_all_model(request):
 def delprinterdata(request):
     Printer.objects.all().delete()
     return redirect('/list/')
+
+
+def list(request):
+    if request.method == 'GET':
+        printer = RegisteredPrinter.objects.all()
+        gcode = GcodeFile.objects.all()
+        return render(request, 'list_websocket.html', context={'printer': printer, 'gcode': gcode})

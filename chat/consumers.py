@@ -1,6 +1,8 @@
 # chat/consumers.py
 import json
+import time
 from channels.generic.websocket import WebsocketConsumer
+import threading
 
 # 到时候全部models移到chat
 from app.models import RegisteredPrinter, GcodeFile
@@ -19,7 +21,7 @@ class PrinterConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         self.data = json.loads(text_data)
 
-        print(self.data)
+        # print(self.data)
         # print(self.data.keys())
         # print(self.data.get('octoprint_data').keys())
         # print(self.data.get('octoprint_event').keys())
@@ -100,3 +102,69 @@ class PrinterConsumer(WebsocketConsumer):
         if octoprint_event.get('event_type') == 'PrintDone':
             gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
             gcode_file.update(gcode_printed=True)
+
+
+class PrintConsumer(WebsocketConsumer):
+    def connect(self):
+        self.accept()
+        self.close = False
+        self.send_loop_thread = threading.Thread(target=self.send_loop)
+        self.send_loop_thread.daemon = True
+        self.send_loop_thread.start()
+
+    def receive(self, text_data=None, bytes_data=None):
+        pass
+
+    def disconnect(self, close_code):
+        self.close = True
+        # Called when the socket close
+
+    def send_loop(self):
+        data = {}
+        while True:
+            if self.close:
+                return
+            time.sleep(2)
+            data.update(self.get_printer_state())
+            data.update(self.get_print_progress())
+            # print(data)
+            self.send(json.dumps(data))
+
+    def get_printer_state(self):
+        printer_list = {}
+        printer = Printer.objects.all()
+
+        for p in printer:
+            if p.ready:
+                state = '在线，可供打印'
+            # 找出打印的是什么
+            elif p.printing:
+                state = '打印中'
+            elif p.cancelling:
+                state = '正在取消'
+            elif p.pausing:
+                state = '暂停中'
+            elif p.paused:
+                state = '已暂停打印'
+            elif not p.closedOrError:
+                state = '打印机关闭或错误'
+            else:
+                state = '离线'
+            printer_list[p.printer_id] = state
+        if printer_list:
+            return {'printer_state': printer_list}
+        else:
+            return {'printer_state': '当前无打印机注册'}
+
+    def get_print_progress(self):
+        print = Print.objects.all().first()
+        # 当前仅实现一个
+        # for print_job in print:
+        if print:
+            print_job = {'print_progress:': model_to_dict(print,
+                                                          fields=['estimatedPrintTime', 'averagePrintTime',
+                                                                  'completion', 'printTime', 'printTimeLeft', ])}
+        else:
+            print_job = {'print_progress': '当前无任务'}
+
+        return print_job
