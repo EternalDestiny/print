@@ -233,7 +233,6 @@ def delprinterdata(request):
     Printer.objects.all().delete()
     return redirect('/list/')
 
-
 def list(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()

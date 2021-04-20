@@ -115,6 +115,7 @@ class PrintConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         pass
 
+
     def disconnect(self, close_code):
         self.close = True
         # Called when the socket close
@@ -127,7 +128,7 @@ class PrintConsumer(WebsocketConsumer):
             time.sleep(2)
             data.update(self.get_printer_state())
             data.update(self.get_print_progress())
-            # print(data)
+            #print(data)
             self.send(json.dumps(data))
 
     def get_printer_state(self):
