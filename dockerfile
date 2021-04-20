@@ -3,7 +3,7 @@ RUN mkdir -p /chen
 WORKDIR /chen
 COPY pip.conf /root/.pip/pip.conf
 COPY requirements.txt /chen/
-RUN python pip install -r /chen/requirements.txt
+RUN pip install -r /chen/requirements.txt
 RUN rm -rf /chen
 COPY . /chen
 CMD ["python","./manage.py","runserver","0.0.0.0:8000"]
