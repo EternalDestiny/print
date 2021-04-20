@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>print list</title>
+</head>
+
+<body>
+
+
+<script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws'
+    );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const printer_state = JSON.stringify(data.printer_state)
+        const print_progress = JSON.stringify(data.print_progress)
+
+        document.querySelector('#printer_state').value = printer_state;
+        document.querySelector('#print_progress').value = print_progress;
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+</script>
+
+
+<table border="1">
+    <thread>
+        <tr>
+            <th>printer_id</th>
+            <th>owner</th>
+            <th>address</th>
+        </tr>
+    </thread>
+    {% for printer in printer %}
+        <tr>
+            <td>{{ printer.printer_id }}</td>
+            <td>{{ printer.owner }}</td>
+            <td>{{ printer.address }}</td>
+
+        </tr>
+    {% endfor %}
+</table>
+
+
+<p>打印机状态：
+    <output id="printer_state"></output>
+</p>
+
+<form action="/register_printer/" method="get">
+    {% csrf_token %}
+    <input type="submit" value="注册打印机">
+</form>
+
+<form action="/del_printer/" method="post">
+    {% csrf_token %}
+    <input type="text" name="printer_id">
+    <input type="submit" value="删除打印机">
+</form>
+
+
+<form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
+    {% csrf_token %}
+    <input type="file" name="gcode_file"/>
+    <br>
+    <input type="submit" value="上传文件"/>
+</form>
+
+<table border="1">
+    <thread>
+        <tr>
+            <th>gcode_id</th>
+            <th>gcode_name</th>
+            {#            <th>gcode_url</th>#}
+            {#            <th>gcode_safepath</th>#}
+            <th>gcode_printing</th>
+            <th>gcode_printed</th>
+            <th>gcode_selected</th>
+            <th>gcode_printer_id</th>
+        </tr>
+    </thread>
+    {% for gcode in gcode %}
+        <tr>
+            <td>{{ gcode.gcode_id }}</td>
+            <td>{{ gcode.gcode_name }}</td>
+            {#            <td>{{ gcode.gcode_url }}</td>#}
+            {#            <td>{{ gcode.gcode_safepath }}</td>#}
+            <td>{{ gcode.gcode_printing }}</td>
+            <td>{{ gcode.gcode_printed }}</td>
+            <td>{{ gcode.gcode_selected }}</td>
+            <td>{{ gcode.gcode_printer_id }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{#<form action="delgcodedata/" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="number" name="gcode_id">#}
+{#    <input type="submit" value="delete_gcode">#}
+{#</form>#}
+<form action="/delgcodedata/" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="delete_gcode">
+</form>
+
+{#<form action="printgcode/" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="number" name="gcode_id">#}
+{#    <input type="submit" value="print_gcode">#}
+{#</form>#}
+
+<form action="/printgcode/" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="print_gcode">
+</form>
+
+<p>打印机进度：
+    <output id="print_progress"></output>
+</p>
+
+<script type="text/javascript">
+    window.onload = function () {
+        var config = {
+            vx: 4,
+            vy: 4,
+            height: 2,
+            width: 2,
+            count: 100,
+            color: "121, 162, 185",
+            stroke: "100, 200, 180",
+            dist: 6000,
+            e_dist: 20000,
+            max_conn: 10
+        };
+        CanvasParticle(config);
+    }
+</script>
+<script src="{% static "js/canvas-particle.js" %}"></script>
+
+
+</body>
+</html>
