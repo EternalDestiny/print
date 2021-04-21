@@ -178,7 +178,7 @@ def upload_gcode_file(request):
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
 
-        develop = True
+        develop = False
         if develop:
             server = 'http://127.0.0.1:8000'
         else:
