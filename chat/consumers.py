@@ -66,6 +66,7 @@ class PrinterConsumer(WebsocketConsumer):
 
             if gcode_id and octoprint_event:
                 print('更新数据库')
+                print(octoprint_event)
                 self.process_printer_event(octoprint_data, octoprint_event, gcode_id, printer_id)
 
         else:
@@ -87,7 +88,8 @@ class PrinterConsumer(WebsocketConsumer):
         # 更新gcode和Print数据库
         job = octoprint_data.get('job', {})
         progress = octoprint_data.get('progress', {})
-        if octoprint_event.get('event_type') == 'PrintStarted':
+        # if octoprint_event.get('event_type') == 'PrintStarted':
+        if octoprint_event.get('event_type') == 'PrintStateChanged':
             gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
             gcode_file.update(gcode_printing=True)
 
