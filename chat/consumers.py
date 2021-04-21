@@ -21,7 +21,7 @@ class PrinterConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         self.data = json.loads(text_data)
 
-        # print(self.data)
+        print(self.data)
         # print(self.data.keys())
         # print(self.data.get('octoprint_data').keys())
         # print(self.data.get('octoprint_event').keys())
