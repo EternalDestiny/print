@@ -34,7 +34,6 @@ class PrinterConsumer(WebsocketConsumer):
 
         # current_print_ts = self.data.get('current_print_ts')
         printer_state = octoprint_data.get('state', {}).get('flags', {})
-
         if RegisteredPrinter.objects.filter(printer_id=printer_id):
             if printer_state:
                 printer_state.__delitem__('sdReady')
@@ -66,6 +65,7 @@ class PrinterConsumer(WebsocketConsumer):
                     print_job.save()
 
             if gcode_id and octoprint_event:
+                print('更新数据库')
                 self.process_printer_event(octoprint_data, octoprint_event, gcode_id, printer_id)
 
         else:
