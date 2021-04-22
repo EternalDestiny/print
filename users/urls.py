@@ -17,9 +17,10 @@ from django.urls import include, path, re_path
 from .views import *
 
 urlpatterns = [
-	path('register', registerView, name='register'),
-	path('', loginView, name='login'),
-	# path('register.html', registerView, name='register'),
-	path('setps', setpsView, name='setps'),
-	path('logout', logoutView, name='logout'),
+    path('register', registerView, name='register'),
+    path('', loginView, name='login'),
+    path('login', loginView, name='login'),
+    # path('register.html', registerView, name='register'),
+    path('setps', setpsView, name='setps'),
+    path('logout', logoutView, name='logout'),
 ]

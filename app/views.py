@@ -47,7 +47,7 @@ def register_printer(request):
             if not result:
                 v.save()
                 Printer.objects.get_or_create(printer_id=printer_id)
-            return redirect('/list/')
+            return redirect('/list_websocket/')
         else:
             error_msg = v.errors.as_json()
             return render(request, 'register_printer.html', locals())
@@ -74,7 +74,7 @@ def del_printer(request):
     if request.method == 'POST':
         RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id']).delete()
         Printer.objects.filter(printer_id=request.POST['printer_id']).delete()
-        return redirect('/list/')
+        return redirect('/list_websocket/')
 
 
 def printerlist_api(request):
@@ -130,10 +130,13 @@ def delgcodedata(request):
             try:
                 os.remove(gcode_path)
             except Exception:
-                return redirect('/list/')
-            return redirect('/list/')
+                return HttpResponse('出错，请返回')
+            return redirect('/list_websocket/')
+            # return redirect('/list/')
         else:
-            return redirect('/list/')
+            return redirect('/list_websocket/')
+            # return redirect('/list/')
+
     if request.method == 'GET':
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
@@ -143,11 +146,13 @@ def delgcodedata(request):
             try:
                 os.remove(gcode_path)
             except Exception:
-                return redirect('/list/')
+                return HttpResponse('出错，请返回')
             gcode_file_sel.delete()
-            return redirect('/list/')
+            return redirect('/list_websocket/')
+            # return redirect('/list/')
         else:
-            return redirect('/list/')
+            return redirect('/list_websocket/')
+            #return redirect('/list/')
 
 
 def download_gcode_file(request, filename):
@@ -191,25 +196,30 @@ def upload_gcode_file(request):
             gcode_printed='False',
             gcode_selected='False',
         )
+        return redirect('/list_websocket/')
         # return HttpResponse("uploaded over, print started!")
-        return redirect('/list/')
+        #return redirect('/list/')
     else:
-        return redirect('/list/')
+        return redirect('/list_websocket/')
+        #return redirect('/list/')
 
 
 def print_gcode(request):
     if request.method == 'POST':
         gcode_id = request.POST['gcode_id']
         GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='True')
-        return redirect('/list/')
+        return redirect('/list_websocket/')
+        #return redirect('/list/')
     if request.method == 'GET':
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
             gcode_id = model_to_dict(gcode_file_sel)['gcode_id']
             GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='True')
-            return redirect('/list/')
+            return redirect('/list_websocket/')
+            #return redirect('/list/')
         else:
-            return redirect('/list/')
+            return redirect('/list_websocket/')
+            #return redirect('/list/')
 
 
 # develop
@@ -231,7 +241,8 @@ def get_all_model(request):
 
 def delprinterdata(request):
     Printer.objects.all().delete()
-    return redirect('/list/')
+    return redirect('/list_websocket/')
+    #return redirect('/list/')
 
 def list(request):
     if request.method == 'GET':

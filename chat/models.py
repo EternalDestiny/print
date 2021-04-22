@@ -19,8 +19,9 @@ class Printer(models.Model):
     paused = models.BooleanField(null=False, blank=False, default=False)
     ready = models.BooleanField(null=False, blank=False, default=False)
 
-    tool_temperature = models.IntegerField(null=True, blank=True)
-    bed_temperature = models.IntegerField(null=True, blank=True)
+    tool0_temperature = models.IntegerField(null=True, blank=True, default=0)
+    tool2_temperature = models.IntegerField(null=True, blank=True, default=0)
+    bed_temperature = models.IntegerField(null=True, blank=True, default=0)
 
     # class _meta:
     #     abstract = True
@@ -38,7 +39,7 @@ class Print(models.Model):
 
     estimatedPrintTime = models.IntegerField(null=True, blank=True, default=0)
 
-    averagePrintTime = models.IntegerField(null=True, blank=True, default=0)
+    # averagePrintTime = models.IntegerField(null=True, blank=True, default=0)
 
     # 当前打印作业的完成百分比
     completion = models.FloatField(null=True, blank=True, default=0)
@@ -46,5 +47,3 @@ class Print(models.Model):
     printTime = models.IntegerField(null=True, blank=True, default=0)
     # 估计剩余打印时间，以秒为单位
     printTimeLeft = models.IntegerField(null=True, blank=True, default=0)
-
-    # print_event_type=models.CharField(max_length=100,default='Unknown')

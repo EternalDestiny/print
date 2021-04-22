@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -14,12 +14,14 @@ def registerView(request):
         u = request.POST.get('username', '')
         p = request.POST.get('password', '')
         if User.objects.filter(username=u):
-            tips = '用户已存在'
+            tips = '用户已存在,请登录'
+            return redirect('/login', context={'tips': tips})
         else:
             d = dict(username=u, password=p, is_staff=0, is_superuser=0)
             user = User.objects.create_user(**d)
             user.save()
             tips = '注册成功，请登录'
+            return redirect('/login', locals())
     return render(request, 'user.html', locals())
 
 
@@ -36,11 +38,13 @@ def loginView(request):
             if user:
                 if user.is_active:
                     login(request, user)
-                return HttpResponse('登录成功')
+                return redirect('/list_websocket/')
             else:
                 tips = '账号密码错误，请重新输入'
+                return redirect('/login', locals())
         else:
             tips = '用户不存在，请注册'
+            return redirect('/register', locals())
     return render(request, 'user.html', locals())
 
 

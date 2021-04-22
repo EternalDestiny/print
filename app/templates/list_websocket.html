@@ -18,11 +18,22 @@
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
+        console.log(data)
         const printer_state = JSON.stringify(data.printer_state)
-        const print_progress = JSON.stringify(data.print_progress)
-
         document.querySelector('#printer_state').value = printer_state;
-        document.querySelector('#print_progress').value = print_progress;
+
+        const print_progress = data.print_progress
+        document.querySelector('#estimatedPrintTime').value = print_progress.estimatedPrintTime
+        document.querySelector('#completion').value = print_progress.completion
+        document.querySelector('#printTime').value = print_progress.printTime
+        document.querySelector('#printTimeLeft').value = print_progress.printTimeLeft
+
+        const temperatures = data.temperatures
+
+        document.querySelector('#tool0_temperature').value = temperatures.tool0_temperature;
+        document.querySelector('#tool1_temperature').value = temperatures.tool1_temperature;
+        document.querySelector('#bed_temperature').value = temperatures.bed_temperature;
+
     };
 
     chatSocket.onclose = function (e) {
@@ -66,6 +77,7 @@
     <input type="submit" value="删除打印机">
 </form>
 
+<br><br>
 
 <form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
     {% csrf_token %}
@@ -79,11 +91,10 @@
         <tr>
             <th>gcode_id</th>
             <th>gcode_name</th>
-            {#            <th>gcode_url</th>#}
-            {#            <th>gcode_safepath</th>#}
             <th>gcode_printing</th>
             <th>gcode_printed</th>
             <th>gcode_selected</th>
+            <th>gcode_printfailed</th>
             <th>gcode_printer_id</th>
         </tr>
     </thread>
@@ -91,11 +102,10 @@
         <tr>
             <td>{{ gcode.gcode_id }}</td>
             <td>{{ gcode.gcode_name }}</td>
-            {#            <td>{{ gcode.gcode_url }}</td>#}
-            {#            <td>{{ gcode.gcode_safepath }}</td>#}
             <td>{{ gcode.gcode_printing }}</td>
             <td>{{ gcode.gcode_printed }}</td>
             <td>{{ gcode.gcode_selected }}</td>
+            <td>{{ gcode.gcode_printfailed }}</td>
             <td>{{ gcode.gcode_printer_id }}</td>
         </tr>
     {% endfor %}
@@ -122,8 +132,36 @@
     <input type="submit" value="print_gcode">
 </form>
 
-<p>打印机进度：
-    <output id="print_progress"></output>
+<p>*****打印进度*****：<br>
+
+    预计打印时间：
+    <output id="estimatedPrintTime"></output>
+    <br>
+
+    完成百分比：
+    <output id="completion"></output>
+    <br>
+
+    已打印时间：
+    <output id="printTime"></output>
+    <br>
+
+    剩余打印时间：
+    <output id="printTimeLeft"></output>
+    <br>
+
+</p>
+
+<p>*****打印机温度*****：<br>
+    tool0：
+    <output id="tool0_temperature"></output>
+    <br>
+    tool1：
+    <output id="tool1_temperature"></output>
+    <br>
+    bed：
+    <output id="bed_temperature"></output>
+    <br>
 </p>
 
 <script type="text/javascript">
