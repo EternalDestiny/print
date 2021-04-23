@@ -22,10 +22,4 @@ urlpatterns = [
     path('', include(('app.urls', 'app'), namespace='app')),
     path('', include(('users.urls', 'users'), namespace='users')),
 
-    # path('', include('chat.urls')),
-
-    # path('chat/', include('chat.urls')),
-
-    path('download/', include(('app.urls', 'app'), namespace='download')),
-
 ]

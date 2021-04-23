@@ -3,6 +3,7 @@ from .models import RegisteredPrinter, GcodeFile
 from chat.models import Print, Printer
 
 
+# 注册打印机使用ModelForm表单
 class PrinterForm(forms.ModelForm):
     class Meta:
         model = RegisteredPrinter

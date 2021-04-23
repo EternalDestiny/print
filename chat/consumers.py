@@ -49,17 +49,20 @@ class PrinterConsumer(WebsocketConsumer):
 
         # current_print_ts = data.get('current_print_ts')
 
+        # 打印机状态
         printer_state = octoprint_data.get('state', {}).get('flags', {})
+        #打印工作
         job = octoprint_data.get('job', {})
+        #打印进度
         progress = octoprint_data.get('progress', {})
 
         if RegisteredPrinter.objects.filter(printer_id=printer_id):
             printer = Printer.objects.filter(printer_id=printer_id)
+            #更新打印机状态
             if printer_state:
                 printer_state.__delitem__('sdReady')
                 printer.update(**printer_state)
                 self.send_data_to_client(message='打印机状态接收成功')
-
             if temperatures:
                 printer.update(tool0_temperature=temperatures.get('tool0', {}).get('actual', 0))
                 printer.update(tool1_temperature=temperatures.get('tool1', {}).get('actual', 0))
@@ -100,7 +103,7 @@ class PrinterConsumer(WebsocketConsumer):
                                      printTime=progress.get('printTime', 0),
                                      printTimeLeft=progress.get('printTimeLeft', 0),
                                      )
-
+                # 打印任务开始时
                 if event_type == 'PrintStarted':
                     # 更新gcode_file表
                     gcode_file.gcode_printer_id = printer_aval.printer_id
@@ -113,9 +116,13 @@ class PrinterConsumer(WebsocketConsumer):
                     print_job = Print(gcodefile=gcode_file)
                     print_job.save()
 
+                # 打印任务结束时
                 if event_type == 'PrintDone':
+                    # 更新gcode_file表
                     gcode_file.update(gcode_printed=True)
 
+                # 打印失败时
+                # 更新gcode_file表
                 if event_type == 'PrintFailed':
                     gcode_file.update(gcode_printfailed=True)
                     gcode_file.update(gcode_printing=False)
@@ -123,6 +130,7 @@ class PrinterConsumer(WebsocketConsumer):
         else:
             self.send_data_to_client(message='打印机未注册')
 
+    #传输给客户端的数据
     def send_data_to_client(self, message=None, command=None, data=None):
         self.send(text_data=json.dumps(
             {
@@ -154,11 +162,15 @@ class PrintConsumer(WebsocketConsumer):
             if self.close:
                 return
             time.sleep(1)
+            # 发送两种数据给前端
+            # 打印机状态
             data.update(self.get_printer_state())
+            # 打印进度（包括当前温度）
             data.update(self.get_print_progress())
-            #print(data)
+            # print(data)
             self.send(json.dumps(data))
 
+    #从数据库中获得打印机状态信息
     def get_printer_state(self):
         printer_list = {}
         printer = Printer.objects.all()
@@ -184,6 +196,7 @@ class PrintConsumer(WebsocketConsumer):
         else:
             return {'printer_state': '当前无打印机注册'}
 
+    # 从数据库中获得打印进度信息
     def get_print_progress(self):
         # 当前仅实现一个任务
         print = Print.objects.all().first()
@@ -200,14 +213,9 @@ class PrintConsumer(WebsocketConsumer):
                               'printTime': printTime,
                               'printTimeLeft': printTimeLeft, }
 
-            # print_progress = model_to_dict(print,
-            #                                fields=['estimatedPrintTime',
-            #                                        'completion', 'printTime', 'printTimeLeft', ])
-
             data['print_progress'] = print_progress
 
             printer_id = print.printer_id
-
             printer = Printer.objects.filter(printer_id=printer_id).first()
             temperatures = model_to_dict(printer,
                                          fields=['tool0_temperature', 'tool1_temperature',

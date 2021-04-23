@@ -1,12 +1,14 @@
 from django.db import models
 
 
+# 注册3d打印机信息表
 class RegisteredPrinter(models.Model):
     printer_id = models.CharField(max_length=100, primary_key=True)
     owner = models.CharField(max_length=20)
     address = models.CharField(max_length=20)
 
 
+#gcode文件信息表表
 class GcodeFile(models.Model):
     gcode_id = models.AutoField(primary_key=True)
     gcode_name = models.CharField(max_length=100)

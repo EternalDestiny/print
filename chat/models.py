@@ -2,6 +2,7 @@ from django.db import models
 from app.models import GcodeFile
 
 
+# Printer状态信息表
 class Printer(models.Model):
     printer_id = models.CharField(max_length=100, primary_key=True)
 
@@ -23,11 +24,8 @@ class Printer(models.Model):
     tool2_temperature = models.IntegerField(null=True, blank=True, default=0)
     bed_temperature = models.IntegerField(null=True, blank=True, default=0)
 
-    # class _meta:
-    #     abstract = True
-    #     ordering = ['printer_id']
 
-
+#打印任务表
 class Print(models.Model):
     # 级联删除gcodefile
     gcodefile = models.OneToOneField(to=GcodeFile,
@@ -37,6 +35,7 @@ class Print(models.Model):
                                      related_name='print',
                                      primary_key=True)
 
+    # 预计打印时间
     estimatedPrintTime = models.IntegerField(null=True, blank=True, default=0)
 
     # averagePrintTime = models.IntegerField(null=True, blank=True, default=0)
