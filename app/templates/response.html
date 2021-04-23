@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>error</title>
+</head>
+<body>
+<div>{{ tips }}</div>
+
+<form action="/list_websocket/" method="GET">
+    {% csrf_token %}
+    <input type="submit" value="返回打印页面">
+</form>
+
+</body>
+</html>
