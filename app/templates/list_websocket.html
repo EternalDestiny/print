@@ -18,8 +18,9 @@
         {% if not username %}
             <li><a href="/login">登录</a></li>
         {% endif %}
-        <li><a href="/register">注册</a></li>
+        <li><a href="/register">注册用户</a></li>
         <li><a href="/logout">登出</a></li>
+        <li><a href="/register_printer">注册打印机</a></li>
     </ul>
 </nav>
 
@@ -57,7 +58,7 @@
 </script>
 
 {% if printer %}
-    <table border="1">
+    <table class="mytable" border="1">
 
         <thread>
             <tr>
@@ -77,19 +78,16 @@
     </table>
 {% endif %}
 
-
-<p>打印机状态：
+<br>
+<div class="container">打印机状态：
     <output id="printer_state"></output>
-</p>
+</div>
 
-<form action="/register_printer/" method="get">
-    {% csrf_token %}
-    <input type="submit" value="注册打印机">
-</form>
+<br>
 
 <form action="/del_printer/" method="post">
     {% csrf_token %}
-    <input type="text" name="printer_id">
+    <input type="text" name="printer_id" placeholder="请输入打印机id" required="required">
     <input type="submit" value="删除打印机">
 </form>
 
@@ -98,12 +96,11 @@
 <form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
     {% csrf_token %}
     <input type="file" name="gcode_file"/>
-    <br>
     <input type="submit" value="上传文件"/>
 </form>
 
 {% if gcode %}
-    <table border="1">
+    <table class="mytable">
         <thread>
             <tr>
                 <th>gcode_id</th>
@@ -150,27 +147,23 @@
     <input type="submit" value="print_gcode">
 </form>
 <br>
-<p>*****打印进度*****：<br>
-
+<div class="container">*****打印进度*****：<br>
     预计打印时间：
     <output id="estimatedPrintTime"></output>
     <br>
-
     完成百分比：
     <output id="completion"></output>
     <br>
-
     已打印时间：
     <output id="printTime"></output>
     <br>
-
     剩余打印时间：
     <output id="printTimeLeft"></output>
     <br>
+</div>
 
-</p>
 <br>
-<p>*****打印机温度*****：<br>
+<div class="container">*****打印机温度*****：<br>
     tool0：
     <output id="tool0_temperature"></output>
     <br>
@@ -180,7 +173,7 @@
     bed：
     <output id="bed_temperature"></output>
     <br>
-</p>
+</div>
 
 <script type="text/javascript">
     window.onload = function () {

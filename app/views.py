@@ -157,10 +157,11 @@ def upload_gcode_file(request):
 
     if request.method == 'POST':
         gcode_file_re = request.FILES.get("gcode_file", None)
-        gcode_path = os.path.join(gcode_folder, gcode_file_re.name)
         if not gcode_file_re:
             tips = '文件上传出错'
             return render(request, 'response.html', context={'tips': tips})
+        else:
+            gcode_path = os.path.join(gcode_folder, gcode_file_re.name)
         with open(gcode_path, 'wb+') as f:
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
