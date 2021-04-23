@@ -1,5 +1,4 @@
 """print URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
@@ -17,10 +16,14 @@ from django.urls import include, path, re_path
 from .views import *
 
 urlpatterns = [
-    path('register', registerView, name='register'),
+    # 默认进入登录界面
     path('', loginView, name='login'),
     path('login', loginView, name='login'),
-    # path('register.html', registerView, name='register'),
+
+    # 注册
+    path('register', registerView, name='register'),
+    # 修改密码
     path('setps', setpsView, name='setps'),
+    # 登出
     path('logout', logoutView, name='logout'),
 ]

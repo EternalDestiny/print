@@ -4,10 +4,24 @@
     {% load static %}
     <meta charset="UTF-8">
     <title>print list</title>
+    <link rel="stylesheet" href="{% static "css/navbar.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/app.css" %}"/>
 </head>
 
 <body>
-
+<nav>
+    <ul>
+        <li><a class="active" href="#home">首页</a></li>
+        {% if username %}
+            <li><a>当前登录用户：{{ username }}</a></li>
+        {% endif %}
+        {% if not username %}
+            <li><a href="/login">登录</a></li>
+        {% endif %}
+        <li><a href="/register">注册</a></li>
+        <li><a href="/logout">登出</a></li>
+    </ul>
+</nav>
 
 <script>
     const chatSocket = new WebSocket(
@@ -42,24 +56,26 @@
 
 </script>
 
+{% if printer %}
+    <table border="1">
 
-<table border="1">
-    <thread>
-        <tr>
-            <th>printer_id</th>
-            <th>owner</th>
-            <th>address</th>
-        </tr>
-    </thread>
-    {% for printer in printer %}
-        <tr>
-            <td>{{ printer.printer_id }}</td>
-            <td>{{ printer.owner }}</td>
-            <td>{{ printer.address }}</td>
+        <thread>
+            <tr>
+                <th>printer_id</th>
+                <th>owner</th>
+                <th>address</th>
+            </tr>
+        </thread>
+        {% for printer in printer %}
+            <tr>
+                <td>{{ printer.printer_id }}</td>
+                <td>{{ printer.owner }}</td>
+                <td>{{ printer.address }}</td>
 
-        </tr>
-    {% endfor %}
-</table>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
 
 
 <p>打印机状态：
@@ -77,7 +93,7 @@
     <input type="submit" value="删除打印机">
 </form>
 
-<br><br>
+<br>
 
 <form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
     {% csrf_token %}
@@ -86,30 +102,32 @@
     <input type="submit" value="上传文件"/>
 </form>
 
-<table border="1">
-    <thread>
-        <tr>
-            <th>gcode_id</th>
-            <th>gcode_name</th>
-            <th>gcode_printing</th>
-            <th>gcode_printed</th>
-            <th>gcode_selected</th>
-            <th>gcode_printfailed</th>
-            <th>gcode_printer_id</th>
-        </tr>
-    </thread>
-    {% for gcode in gcode %}
-        <tr>
-            <td>{{ gcode.gcode_id }}</td>
-            <td>{{ gcode.gcode_name }}</td>
-            <td>{{ gcode.gcode_printing }}</td>
-            <td>{{ gcode.gcode_printed }}</td>
-            <td>{{ gcode.gcode_selected }}</td>
-            <td>{{ gcode.gcode_printfailed }}</td>
-            <td>{{ gcode.gcode_printer_id }}</td>
-        </tr>
-    {% endfor %}
-</table>
+{% if gcode %}
+    <table border="1">
+        <thread>
+            <tr>
+                <th>gcode_id</th>
+                <th>gcode_name</th>
+                <th>gcode_printing</th>
+                <th>gcode_printed</th>
+                <th>gcode_selected</th>
+                <th>gcode_printfailed</th>
+                <th>gcode_printer_id</th>
+            </tr>
+        </thread>
+        {% for gcode in gcode %}
+            <tr>
+                <td>{{ gcode.gcode_id }}</td>
+                <td>{{ gcode.gcode_name }}</td>
+                <td>{{ gcode.gcode_printing }}</td>
+                <td>{{ gcode.gcode_printed }}</td>
+                <td>{{ gcode.gcode_selected }}</td>
+                <td>{{ gcode.gcode_printfailed }}</td>
+                <td>{{ gcode.gcode_printer_id }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
 
 {#<form action="delgcodedata/" method="POST">#}
 {#    {% csrf_token %}#}
@@ -131,7 +149,7 @@
     {% csrf_token %}
     <input type="submit" value="print_gcode">
 </form>
-
+<br>
 <p>*****打印进度*****：<br>
 
     预计打印时间：
@@ -151,7 +169,7 @@
     <br>
 
 </p>
-
+<br>
 <p>*****打印机温度*****：<br>
     tool0：
     <output id="tool0_temperature"></output>
@@ -182,7 +200,6 @@
     }
 </script>
 <script src="{% static "js/canvas-particle.js" %}"></script>
-
 
 </body>
 </html>

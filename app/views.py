@@ -6,26 +6,32 @@ from chat.models import Printer, Print
 from django.http import FileResponse, JsonResponse, HttpResponse, Http404
 from app.form import PrinterForm
 from django.forms.models import model_to_dict
+from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
 
 import os
 
 
-# Create your views here.t
-
-def index(request):
-    return render(request, 'index.html')
+# Create your views here:
 
 
 # @login_required
+
+# 主页面
 def printerlist(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()
         gcode = GcodeFile.objects.all()
-        return render(request, 'list.html', context={'printer': printer, 'gcode': gcode})
+        if request.user.is_authenticated:
+            username = request.user.username
+        else:
+            username = None
+        return render(request, 'list_websocket.html',
+                      context={'printer': printer, 'gcode': gcode, 'username': username})
 
 
+#注册打印机页面（使用ModelForm表单）
 def register_printer(request):
     if request.method == 'GET':
         printer_id = request.GET.get('printer_id', '')
@@ -42,7 +48,7 @@ def register_printer(request):
         v = PrinterForm(data=request.POST, prefix='vv')
         if v.is_valid():
             printer_id = request.POST['vv-printer_id']
-            print(printer_id)
+            #print(printer_id)
             result = RegisteredPrinter.objects.filter(printer_id=printer_id)
             if not result:
                 v.save()
@@ -53,12 +59,13 @@ def register_printer(request):
             return render(request, 'register_printer.html', locals())
 
 
+#插件自动注册3d打印机
 def register_printer_plugin(request):
     if request.method == 'POST':
         data = request.POST
-        printer_id = data.get('printer_id')
-        owner = data.get('owner')
-        address = data.get('address')
+        printer_id = data.get('printer_id', '')
+        owner = data.get('owner', '')
+        address = data.get('address', '')
         if printer_id and owner and address:
             if RegisteredPrinter.objects.filter(printer_id=printer_id):
                 return HttpResponse('already')
@@ -70,93 +77,64 @@ def register_printer_plugin(request):
             return HttpResponse('fail')
 
 
+#删除打印机
 def del_printer(request):
     if request.method == 'POST':
-        RegisteredPrinter.objects.filter(printer_id=request.POST['printer_id']).delete()
-        Printer.objects.filter(printer_id=request.POST['printer_id']).delete()
-        return redirect('/list_websocket/')
-
-
-def printerlist_api(request):
-    printer_list = {}
-    if request.method == 'GET':
-        printer = Printer.objects.all()
-
-        for p in printer:
-            if p.ready:
-                state = '在线，可供打印'
-            # 找出打印的是什么
-            elif p.printing:
-                state = '打印中'
-            elif p.cancelling:
-                state = '正在取消'
-            elif p.pausing:
-                state = '暂停中'
-            elif p.paused:
-                state = '已暂停打印'
-            elif not p.closedOrError:
-                state = '打印机关闭或错误'
-            else:
-                state = '离线'
-            printer_list[p.printer_id] = state
-        return JsonResponse(printer_list, json_dumps_params={'ensure_ascii': False})
-
-    if request.method == 'POST':
-        return JsonResponse(printer_list)
-
-
-def print_api(request):
-    if request.method == 'GET':
-        print = Print.objects.all().first()
-        # 当前仅实现一个
-        # for print_job in print:
-        if print:
-            print_job = model_to_dict(print,
-                                      fields=['estimatedPrintTime', 'averagePrintTime',
-                                              'completion', 'printTime', 'printTimeLeft', ])
+        print_id = request.POST.get('printer_id', '')
+        printer = RegisteredPrinter.objects.filter(printer_id=print_id)
+        if printer:
+            printer.delete()
+            Printer.objects.filter(printer_id=print_id).delete()
+            return render(request, 'response.html', context={'tips': '成功删除'})
         else:
-            print_job = {'msg': '当前无任务'}
-    return JsonResponse(print_job, json_dumps_params={'ensure_ascii': False})
+            return render(request, 'response.html', context={'tips': '打印机不存在'})
 
 
+#删除gcode
 def delgcodedata(request):
     if request.method == 'POST':
-        if GcodeFile.objects.filter(gcode_id=request.POST['gcode_id']):
-            gcode_file_sel = GcodeFile.objects.get(gcode_id=request.POST['gcode_id'])
+        gcode_id = request.POST.get('gcode_id', 0)
+        gcode_file_sel = GcodeFile.objects.filter(pk=gcode_id).first()
+        if gcode_file_sel:
             if gcode_file_sel.gcode_printing:
-                return HttpResponse('文件正在打印，请等待打印完成')
-            gcode_path = model_to_dict(gcode_file_sel)['gcode_safepath']
+                tips = '文件正在打印，请等待打印完成'
+                return render(request, 'response.html', context={'tips': tips})
+            gcode_path = gcode_file_sel.gcode_safepath
             gcode_file_sel.delete()
             try:
                 os.remove(gcode_path)
             except Exception:
-                return HttpResponse('出错，请返回')
-            return redirect('/list_websocket/')
-            # return redirect('/list/')
+                return render(request, 'response.html', context={'tips': '出错，请返回'})
+            return render(request, 'response.html', context={'tips': '删除成功'})
         else:
-            return redirect('/list_websocket/')
-            # return redirect('/list/')
+            return render(request, 'response.html', context={'tips': '删除成功'})
 
     if request.method == 'GET':
+        #因为只会有一个gcode文件
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
             if gcode_file_sel.gcode_printing:
-                return HttpResponse('文件正在打印，请等待打印完成')
+                tips = '文件正在打印，请等待打印完成'
+                return render(request, 'response.html', context={'tips': tips})
             gcode_path = model_to_dict(gcode_file_sel)['gcode_safepath']
+            gcode_file_sel.delete()
             try:
                 os.remove(gcode_path)
             except Exception:
-                return HttpResponse('出错，请返回')
-            gcode_file_sel.delete()
-            return redirect('/list_websocket/')
-            # return redirect('/list/')
+                tips = 'gcode文件删除出错'
+                return render(request, 'response.html', context={'tips': tips})
+
+            tips = 'gcode文件删除成功'
+            return render(request, 'response.html', context={'tips': tips})
         else:
-            return redirect('/list_websocket/')
-            #return redirect('/list/')
+            tips = 'gcode文件不存在'
+            return render(request, 'response.html', context={'tips': tips})
 
 
+#下载gcode文件
 def download_gcode_file(request, filename):
     if request.method == 'GET':
+        #gcode文件所在文件夹
         gcode_folder = os.path.join(os.getcwd(), "gcodefiles")
         file_path = os.path.join(gcode_folder, filename)
         try:
@@ -167,18 +145,22 @@ def download_gcode_file(request, filename):
             raise Http404('download error')
 
 
+#上传gcode文件
 def upload_gcode_file(request):
     gcode_folder = os.path.join(os.getcwd(), "gcodefiles")
     if not os.path.exists(gcode_folder):
-        os.makedirs("gcodefiles")
+        os.makedirs(gcode_folder)
 
     if GcodeFile.objects.all().first():
-        return HttpResponse('已有文件上传，请先打印')
+        tips = '已有文件上传，请先打印'
+        return render(request, 'response.html', context={'tips': tips})
+
     if request.method == 'POST':
         gcode_file_re = request.FILES.get("gcode_file", None)
         gcode_path = os.path.join(gcode_folder, gcode_file_re.name)
         if not gcode_file_re:
-            return HttpResponse("no files for upload!")
+            tips = '文件上传出错'
+            return render(request, 'response.html', context={'tips': tips})
         with open(gcode_path, 'wb+') as f:
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
@@ -196,33 +178,40 @@ def upload_gcode_file(request):
             gcode_printed='False',
             gcode_selected='False',
         )
-        return redirect('/list_websocket/')
-        # return HttpResponse("uploaded over, print started!")
-        #return redirect('/list/')
-    else:
-        return redirect('/list_websocket/')
-        #return redirect('/list/')
+
+        tips = '文件上传成功'
+        return render(request, 'response.html', context={'tips': tips})
+    if request.method == 'GET':
+        tips = 'no response'
+        return render(request, 'response.html', context={'tips': tips})
 
 
+# 打印gcode
 def print_gcode(request):
     if request.method == 'POST':
-        gcode_id = request.POST['gcode_id']
-        GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='True')
-        return redirect('/list_websocket/')
-        #return redirect('/list/')
+        gcode_id = request.POST.get('gcode_id', '')
+        gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
+        if gcode_file:
+            gcode_file.update(gcode_selected='True')
+
+        tips = '文件已选中，等待空闲打印机'
+        return render(request, 'response.html', context={'tips': tips})
+
     if request.method == 'GET':
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
-            gcode_id = model_to_dict(gcode_file_sel)['gcode_id']
-            GcodeFile.objects.filter(gcode_id=gcode_id).update(gcode_selected='True')
-            return redirect('/list_websocket/')
-            #return redirect('/list/')
+            gcode_id = gcode_file_sel.gcode_id
+            gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
+            if gcode_file:
+                gcode_file.update(gcode_selected='True')
+            tips = '文件已选中，等待空闲打印机'
+            return render(request, 'response.html', context={'tips': tips})
         else:
-            return redirect('/list_websocket/')
-            #return redirect('/list/')
+            tips = '无gcode文件'
+            return render(request, 'response.html', context={'tips': tips})
 
 
-# develop
+# 开发测试用
 def del_alldata(request):
     Printer.objects.all().delete()
     RegisteredPrinter.objects.all().delete()
@@ -238,14 +227,8 @@ def get_all_model(request):
         print_job = Print.objects.all()
         return render(request, 'develop.html', locals())
 
-
 def delprinterdata(request):
     Printer.objects.all().delete()
     return redirect('/list_websocket/')
     #return redirect('/list/')
 
-def list(request):
-    if request.method == 'GET':
-        printer = RegisteredPrinter.objects.all()
-        gcode = GcodeFile.objects.all()
-        return render(request, 'list_websocket.html', context={'printer': printer, 'gcode': gcode})

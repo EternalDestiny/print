@@ -13,6 +13,7 @@ from django.forms.models import model_to_dict
 from django.db.models import Q
 
 
+# 与3d打印机控制软件插件的websocket
 class PrinterConsumer(WebsocketConsumer):
     def connect(self):
         # 在这里添加plugin连接的验证信息，验证成功才能连接，本系统尚未实现
@@ -131,6 +132,7 @@ class PrinterConsumer(WebsocketConsumer):
             }))
 
 
+#与前端网页的websocket，负责推送数据
 class PrintConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
@@ -213,12 +215,12 @@ class PrintConsumer(WebsocketConsumer):
             data['temperatures'] = temperatures
 
         else:
-            data = {'print_progress': {'estimatedPrintTime': 'unknown',
-                                       'completion': 'unknown',
-                                       'printTime': 'unknown',
-                                       'printTimeLeft': 'unknown'},
-                    'temperatures': {'tool0_temperature': 'unknown',
-                                     'tool1_temperature': 'unknown',
-                                     'bed_temperature': 'unknown', }}
+            data = {'print_progress': {'estimatedPrintTime': '无数据',
+                                       'completion': '无数据',
+                                       'printTime': '无数据',
+                                       'printTimeLeft': '无数据'},
+                    'temperatures': {'tool0_temperature': '无数据',
+                                     'tool1_temperature': '无数据',
+                                     'bed_temperature': '无数据', }}
 
         return data

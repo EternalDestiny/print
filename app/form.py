@@ -20,14 +20,3 @@ class PrinterForm(forms.ModelForm):
         error_messages = {
             '__all__': {'required': '请输入内容', 'invalid': '请检查输入内容'},
         }
-
-# class PrinterStateForm(forms.ModelForm):
-#     class Meta:
-#         model = Printer
-#         fields = '__all__'
-#
-#
-# class GcodeFileForm(forms.ModelForm):
-#     class Meta:
-#         model = GcodeFile
-#         fields = '__all__'
