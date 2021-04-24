@@ -231,5 +231,3 @@ def get_all_model(request):
 def delprinterdata(request):
     Printer.objects.all().delete()
     return redirect('/list_websocket/')
-    #return redirect('/list/')
-
