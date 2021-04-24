@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>error</title>
+    <link rel="stylesheet" href="{% static "css/response.css" %}"/>
 </head>
 <body>
-<div>{{ tips }}</div>
 
-<form action="/list_websocket/" method="GET">
-    {% csrf_token %}
-    <input type="submit" value="返回打印页面">
-</form>
+<div class="response">
+    <h2>{{ tips }}</h2>
+    <div>
+        <form action="/list_websocket/" method="GET">
+            {% csrf_token %}
+            <input type="submit" value="返回打印页面">
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
