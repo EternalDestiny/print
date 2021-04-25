@@ -19,7 +19,6 @@ urlpatterns = [
     # 默认进入登录界面
     path('', loginView, name='login'),
     path('login', loginView, name='login'),
-
     # 注册
     path('register', registerView, name='register'),
     # 修改密码

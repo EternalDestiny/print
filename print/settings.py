@@ -139,4 +139,4 @@ STATIC_URL = '/static/'
 ASGI_APPLICATION = 'print.asgi.application'
 
 # login
-LOGIN_URL = '/login.html'
+LOGIN_URL = '/login'

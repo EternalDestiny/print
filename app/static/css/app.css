@@ -11,6 +11,7 @@ ul {
     /*position: fixed;*/
     /*top: 0;*/
     width: 100%;
+    height: 40px;
 }
 
 li {
@@ -82,6 +83,10 @@ input {
 }
 
 input:focus {
+    box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+input:hover {
     box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 

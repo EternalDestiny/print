@@ -16,7 +16,7 @@ urlpatterns = [
     path('delgcodedata/', views.delgcodedata, name='delete'),
     path('printgcode/', views.print_gcode, name='print'),
 
-    # gcode文件URL
+    # 下载gcode文件
     path('download_gcode_file/<str:filename>/', views.download_gcode_file, name='downloaded'),
 
     # develop（开发、测试）

@@ -14,11 +14,8 @@ import os
 
 
 # Create your views here:
-
-
-# @login_required
-
 # 主页面
+@login_required
 def printerlist(request):
     if request.method == 'GET':
         printer = RegisteredPrinter.objects.all()
@@ -32,6 +29,7 @@ def printerlist(request):
 
 
 #注册打印机页面（使用ModelForm表单）
+@login_required
 def register_printer(request):
     if request.method == 'GET':
         printer_id = request.GET.get('printer_id', '')
@@ -48,10 +46,11 @@ def register_printer(request):
         v = PrinterForm(data=request.POST, prefix='vv')
         if v.is_valid():
             printer_id = request.POST['vv-printer_id']
-            #print(printer_id)
             result = RegisteredPrinter.objects.filter(printer_id=printer_id)
             if not result:
+                # 通过ModelForm表单创建RegisteredPrinter表的记录
                 v.save()
+                # 同时创建Printer表的记录，属性值为默认值
                 Printer.objects.get_or_create(printer_id=printer_id)
             return redirect('/list_websocket/')
         else:
@@ -78,6 +77,7 @@ def register_printer_plugin(request):
 
 
 #删除打印机
+@login_required
 def del_printer(request):
     if request.method == 'POST':
         print_id = request.POST.get('printer_id', '')
@@ -91,6 +91,7 @@ def del_printer(request):
 
 
 #删除gcode
+@login_required
 def delgcodedata(request):
     if request.method == 'POST':
         gcode_id = request.POST.get('gcode_id', 0)
@@ -146,6 +147,7 @@ def download_gcode_file(request, filename):
 
 
 #上传gcode文件
+@login_required
 def upload_gcode_file(request):
     gcode_folder = os.path.join(os.getcwd(), "gcodefiles")
     if not os.path.exists(gcode_folder):
@@ -188,6 +190,7 @@ def upload_gcode_file(request):
 
 
 # 打印gcode
+@login_required
 def print_gcode(request):
     if request.method == 'POST':
         gcode_id = request.POST.get('gcode_id', '')
