@@ -220,9 +220,10 @@ class PrintConsumer(WebsocketConsumer):
 
             data['print_progress'] = print_progress
 
-            printer_id = print.printer_id
+            printer_id = GcodeFile.objects.filter(gcode_id=print.gcode_id).first().gcode_printer_id
 
             printer = Printer.objects.filter(printer_id=printer_id).first()
+
             temperatures = model_to_dict(printer,
                                          fields=['tool0_temperature', 'tool1_temperature',
                                                  'bed_temperature', ])
