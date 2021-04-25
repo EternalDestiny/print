@@ -89,9 +89,7 @@ class PrinterConsumer(WebsocketConsumer):
                                              )
 
             # octoprint_event有：PrintDone、PrintFailed、PrintStarted
-            if gcode_id and octoprint_event:
-                event_type = octoprint_event.get('event_type', {})
-
+            if gcode_id:
                 gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id).first()
 
                 # print(octoprint_event)
@@ -104,34 +102,37 @@ class PrinterConsumer(WebsocketConsumer):
                                      printTime=progress.get('printTime', 0),
                                      printTimeLeft=progress.get('printTimeLeft', 0),
                                      )
-                # 打印任务开始时
-                if event_type == 'PrintStarted':
+
+                if octoprint_event:
+                    event_type = octoprint_event.get('event_type', {})
+                    # 打印任务开始时
+                    if event_type == 'PrintStarted':
+                        # 更新gcode_file表
+                        gcode_file.gcode_printer_id = printer_id
+                        gcode_file.save()
+
+                        gcode_file.gcode_selected = False
+                        gcode_file.save()
+                        gcode_file.gcode_printing = True
+                        gcode_file.save()
+
+                        # 新建一个Print工作
+                        print_job = Print(gcodefile=gcode_file)
+                        print_job.save()
+
+                    # 打印任务结束时
+                    if event_type == 'PrintDone':
+                        # 更新gcode_file表
+                        gcode_file.gcode_printed = True
+                        gcode_file.save()
+
+                    # 打印失败时
                     # 更新gcode_file表
-                    gcode_file.gcode_printer_id = printer_id
-                    gcode_file.save()
-
-                    gcode_file.gcode_selected = False
-                    gcode_file.save()
-                    gcode_file.gcode_printing = True
-                    gcode_file.save()
-
-                    # 新建一个Print工作
-                    print_job = Print(gcodefile=gcode_file)
-                    print_job.save()
-
-                # 打印任务结束时
-                if event_type == 'PrintDone':
-                    # 更新gcode_file表
-                    gcode_file.gcode_printed = True
-                    gcode_file.save()
-
-                # 打印失败时
-                # 更新gcode_file表
-                if event_type == 'PrintFailed':
-                    gcode_file.gcode_printfailed = True
-                    gcode_file.save()
-                    gcode_file.gcode_printing = False
-                    gcode_file.save()
+                    if event_type == 'PrintFailed':
+                        gcode_file.gcode_printfailed = True
+                        gcode_file.save()
+                        gcode_file.gcode_printing = False
+                        gcode_file.save()
 
         else:
             self.send_data_to_client(message='打印机未注册')
