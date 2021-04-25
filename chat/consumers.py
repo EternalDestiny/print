@@ -96,7 +96,7 @@ class PrinterConsumer(WebsocketConsumer):
                 # print(octoprint_event)
 
                 # 数据库有打印工作时，更新状态
-                print_job = Print.objects.filter(gcodefile=gcode_file).first()
+                print_job = Print.objects.filter(gcodefile=gcode_file)
                 if print_job:
                     print_job.update(estimatedPrintTime=job.get('estimatedPrintTime', 0),
                                      # averagePrintTime=job.get('averagePrintTime',0),
