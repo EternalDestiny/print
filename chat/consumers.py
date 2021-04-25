@@ -39,7 +39,7 @@ class PrinterConsumer(WebsocketConsumer):
         octoprint_data = data.get('octoprint_data', {})
 
         # 打印机未连接，温度数据为空
-        temperatures = data.get('temperatures', {})
+        temperatures = octoprint_data.get('temperatures', {})
 
         # 打印机事件
         octoprint_event = data.get('octoprint_event', {})
