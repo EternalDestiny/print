@@ -34,6 +34,7 @@ class PrinterConsumer(WebsocketConsumer):
         pass
 
     def process_printer_data(self, data):
+        print(data)
 
         printer_id = data.get('printer_id', {})
         octoprint_data = data.get('octoprint_data', {})
@@ -207,12 +208,9 @@ class PrintConsumer(WebsocketConsumer):
         print = Print.objects.all().first()
         # for print_job in print:
         data = {}
-        if print:
+        if print and print.completion and print.estimatedPrintTime and print.printTimeLeft and print.printTime:
             estimatedPrintTime = str(datetime.timedelta(seconds=print.estimatedPrintTime))
-            if print.completion:
-                completion = format(print.completion / 100, '.0%')
-            else:
-                completion = format(0, '.0%')
+            completion = format(print.completion / 100, '.0%')
             printTime = str(datetime.timedelta(seconds=print.printTime))
             printTimeLeft = str(datetime.timedelta(seconds=print.printTimeLeft))
 
