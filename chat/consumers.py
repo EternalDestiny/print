@@ -91,6 +91,7 @@ class PrinterConsumer(WebsocketConsumer):
             # octoprint_event有：PrintDone、PrintFailed、PrintStarted
             if gcode_id and octoprint_event:
                 event_type = octoprint_event.get('event_type', {})
+                print("*******" + event_type)
                 gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
                 # print(octoprint_event)
 
