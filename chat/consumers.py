@@ -209,11 +209,17 @@ class PrintConsumer(WebsocketConsumer):
         print = Print.objects.all().first()
         # for print_job in print:
         data = {}
-        if print and print.completion and print.estimatedPrintTime and print.printTimeLeft and print.printTime:
-            estimatedPrintTime = str(datetime.timedelta(seconds=print.estimatedPrintTime))
-            completion = format(print.completion / 100, '.0%')
-            printTime = str(datetime.timedelta(seconds=print.printTime))
-            printTimeLeft = str(datetime.timedelta(seconds=print.printTimeLeft))
+        if print:
+            try:
+                estimatedPrintTime = str(datetime.timedelta(seconds=print.estimatedPrintTime))
+                completion = format(print.completion / 100, '.0%')
+                printTime = str(datetime.timedelta(seconds=print.printTime))
+                printTimeLeft = str(datetime.timedelta(seconds=print.printTimeLeft))
+            except:
+                estimatedPrintTime = '无数据'
+                completion = '无数据'
+                printTime = '无数据'
+                printTimeLeft = '无数据'
 
             print_progress = {'estimatedPrintTime': estimatedPrintTime,
                               'completion': completion,
