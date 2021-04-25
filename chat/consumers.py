@@ -220,7 +220,7 @@ class PrintConsumer(WebsocketConsumer):
 
             data['print_progress'] = print_progress
 
-            printer_id = GcodeFile.objects.filter(gcode_id=print.gcode_id).first().gcode_printer_id
+            printer_id = GcodeFile.objects.filter(gcode_id=print.gcodefile_id).first().gcode_printer_id
 
             printer = Printer.objects.filter(printer_id=printer_id).first()
 
