@@ -34,7 +34,7 @@ class PrinterConsumer(WebsocketConsumer):
         pass
 
     def process_printer_data(self, data):
-        print(data)
+        # print(data)
 
         printer_id = data.get('printer_id', {})
         octoprint_data = data.get('octoprint_data', {})
@@ -124,6 +124,8 @@ class PrinterConsumer(WebsocketConsumer):
                     if event_type == 'PrintDone':
                         # 更新gcode_file表
                         gcode_file.gcode_printed = True
+                        gcode_file.save()
+                        gcode_file.gcode_printing = False
                         gcode_file.save()
 
                     # 打印失败时
