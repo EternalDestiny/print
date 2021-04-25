@@ -21,7 +21,7 @@ class Printer(models.Model):
     ready = models.BooleanField(null=False, blank=False, default=False)
 
     tool0_temperature = models.IntegerField(null=True, blank=True, default=0)
-    tool2_temperature = models.IntegerField(null=True, blank=True, default=0)
+    tool1_temperature = models.IntegerField(null=True, blank=True, default=0)
     bed_temperature = models.IntegerField(null=True, blank=True, default=0)
 
 
