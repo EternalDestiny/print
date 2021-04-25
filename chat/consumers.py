@@ -107,7 +107,7 @@ class PrinterConsumer(WebsocketConsumer):
                 # 打印任务开始时
                 if event_type == 'PrintStarted':
                     # 更新gcode_file表
-                    gcode_file.gcode_printer_id = printer_aval.printer_id
+                    gcode_file.gcode_printer_id = printer_id
                     gcode_file.save()
 
                     gcode_file.update(gcode_selected=False)
@@ -217,6 +217,7 @@ class PrintConsumer(WebsocketConsumer):
             data['print_progress'] = print_progress
 
             printer_id = print.printer_id
+
             printer = Printer.objects.filter(printer_id=printer_id).first()
             temperatures = model_to_dict(printer,
                                          fields=['tool0_temperature', 'tool1_temperature',
