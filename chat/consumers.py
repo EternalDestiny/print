@@ -75,9 +75,8 @@ class PrinterConsumer(WebsocketConsumer):
 
             # 查询第一个空闲的打印机
             printer_set = Printer.objects.all()
-
             # 仅仅ready无法判断是否有模型未取下，需要人工，这里简化处理
-            printer_aval = printer_set.filter(ready=True).first()
+            printer_aval = printer_set.filter(ready=True)
 
             if gcode_sel:
                 print("有文件需要打印")
@@ -91,10 +90,10 @@ class PrinterConsumer(WebsocketConsumer):
             # octoprint_event有：PrintDone、PrintFailed、PrintStarted
             if gcode_id and octoprint_event:
                 event_type = octoprint_event.get('event_type', {})
-                print("*******" + event_type)
-                gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id).first()
-                # print(octoprint_event)
 
+                gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id).first()
+
+                # print(octoprint_event)
                 # 数据库有打印工作时，更新状态
                 print_job = Print.objects.filter(gcodefile=gcode_file)
                 if print_job:
