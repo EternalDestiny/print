@@ -209,7 +209,10 @@ class PrintConsumer(WebsocketConsumer):
         data = {}
         if print:
             estimatedPrintTime = str(datetime.timedelta(seconds=print.estimatedPrintTime))
-            completion = format(print.completion / 100, '.0%')
+            if print.completion:
+                completion = format(print.completion / 100, '.0%')
+            else:
+                completion = format(0, '.0%')
             printTime = str(datetime.timedelta(seconds=print.printTime))
             printTimeLeft = str(datetime.timedelta(seconds=print.printTimeLeft))
 
