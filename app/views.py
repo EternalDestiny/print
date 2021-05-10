@@ -85,9 +85,11 @@ def del_printer(request):
         if printer:
             printer.delete()
             Printer.objects.filter(printer_id=print_id).delete()
-            return render(request, 'response.html', context={'tips': '成功删除'})
+            messages.success(request, '成功删除')
+            return redirect('/list_websocket/')
         else:
-            return render(request, 'response.html', context={'tips': '打印机不存在'})
+            messages.error(request, '打印机不存在')
+            return redirect('/list_websocket/')
 
 
 #删除gcode
@@ -98,38 +100,41 @@ def delgcodedata(request):
         gcode_file_sel = GcodeFile.objects.filter(pk=gcode_id).first()
         if gcode_file_sel:
             if gcode_file_sel.gcode_printing:
-                tips = '文件正在打印，请等待打印完成'
-                return render(request, 'response.html', context={'tips': tips})
+                messages.warning(request, '文件正在打印，请等待打印完成')
+                return redirect('/list_websocket/')
             gcode_path = gcode_file_sel.gcode_safepath
             gcode_file_sel.delete()
             try:
                 os.remove(gcode_path)
             except Exception:
-                return render(request, 'response.html', context={'tips': '出错，请返回'})
-            return render(request, 'response.html', context={'tips': '删除成功'})
+                messages.error(request, 'gcode删除出错')
+                return redirect('/list_websocket/')
+            messages.success(request, '删除成功')
+            return redirect('/list_websocket/')
         else:
-            return render(request, 'response.html', context={'tips': '删除成功'})
+            messages.error(request, '无gcode文件')
+            return redirect('/list_websocket/')
 
     if request.method == 'GET':
         #因为只会有一个gcode文件
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
             if gcode_file_sel.gcode_printing:
-                tips = '文件正在打印，请等待打印完成'
-                return render(request, 'response.html', context={'tips': tips})
+                messages.warning(request, '文件正在打印，请等待打印完成')
+                return redirect('/list_websocket/')
             gcode_path = model_to_dict(gcode_file_sel)['gcode_safepath']
             gcode_file_sel.delete()
             try:
                 os.remove(gcode_path)
             except Exception:
-                tips = 'gcode文件删除出错'
-                return render(request, 'response.html', context={'tips': tips})
+                messages.error(request, 'gcode文件删除出错')
+                return redirect('/list_websocket/')
 
-            tips = 'gcode文件删除成功'
-            return render(request, 'response.html', context={'tips': tips})
+            messages.success(request, 'gcode文件删除成功')
+            return redirect('/list_websocket/')
         else:
-            tips = 'gcode文件不存在'
-            return render(request, 'response.html', context={'tips': tips})
+            messages.error(request, 'gcode文件删除出错')
+            return redirect('/list_websocket/')
 
 
 #下载gcode文件
@@ -154,14 +159,14 @@ def upload_gcode_file(request):
         os.makedirs(gcode_folder)
 
     if GcodeFile.objects.all().first():
-        tips = '已有文件上传，请先打印'
-        return render(request, 'response.html', context={'tips': tips})
+        messages.warning(request, '已有文件上传，请先打印')
+        return redirect('/list_websocket/')
 
     if request.method == 'POST':
         gcode_file_re = request.FILES.get("gcode_file", None)
         if not gcode_file_re:
-            tips = '文件上传出错'
-            return render(request, 'response.html', context={'tips': tips})
+            messages.error(request, '未选择文件')
+            return redirect('/list_websocket/')
         else:
             gcode_path = os.path.join(gcode_folder, gcode_file_re.name)
         with open(gcode_path, 'wb+') as f:
@@ -182,11 +187,11 @@ def upload_gcode_file(request):
             gcode_selected='False',
         )
 
-        tips = '文件上传成功'
-        return render(request, 'response.html', context={'tips': tips})
+        messages.success(request, '文件上传成功')
+        return redirect('/list_websocket/')
     if request.method == 'GET':
-        tips = 'no response'
-        return render(request, 'response.html', context={'tips': tips})
+        messages.error(request, 'no response')
+        return redirect('/list_websocket/')
 
 
 # 打印gcode
@@ -198,8 +203,8 @@ def print_gcode(request):
         if gcode_file:
             gcode_file.update(gcode_selected='True')
 
-        tips = '文件已选中，等待空闲打印机'
-        return render(request, 'response.html', context={'tips': tips})
+        messages.success(request, '文件已选中，等待空闲打印机')
+        return redirect('/list_websocket/')
 
     if request.method == 'GET':
         gcode_file_sel = GcodeFile.objects.all().first()
@@ -208,25 +213,26 @@ def print_gcode(request):
             gcode_file = GcodeFile.objects.filter(gcode_id=gcode_id)
             if gcode_file:
                 gcode_file.update(gcode_selected='True')
-            tips = '文件已选中，等待空闲打印机'
-            return render(request, 'response.html', context={'tips': tips})
+            messages.success(request, '文件已选中，等待空闲打印机')
+            return redirect('/list_websocket/')
         else:
-            tips = '无gcode文件'
-            return render(request, 'response.html', context={'tips': tips})
+            messages.error(request, '无gcode文件')
+            return redirect('/list_websocket/')
 
 
 @login_required
+# 打印机控制
 def cmd(request):
     # 选择第一个打印机（当前仅实现一个）
     printer = Printer.objects.all().first()
     if not printer:
-        messages.success(request, '无打印机注册')
+        messages.error(request, '无打印机注册')
         return redirect('/list_websocket/')
     elif not printer.operational:
-        messages.success(request, '打印机未连接或不可用')
+        messages.error(request, '打印机未连接或不可用')
         return redirect('/list_websocket/')
     elif printer.closedOrError:
-        messages.success(request, '打印机关闭或错误')
+        messages.error(request, '打印机关闭或错误')
         return redirect('/list_websocket/')
     else:
         command = Command.objects.get_or_create(printer_id=printer.printer_id)[0]
@@ -261,7 +267,7 @@ def cmd(request):
             return redirect('/list_websocket/')
 
         else:
-            messages.success(request, '无效命令')
+            messages.warning(request, '无效命令')
             return redirect('/list_websocket/')
 
 
