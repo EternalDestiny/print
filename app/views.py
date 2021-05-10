@@ -277,6 +277,7 @@ def del_alldata(request):
     RegisteredPrinter.objects.all().delete()
     GcodeFile.objects.all().delete()
     Print.objects.all().delete()
+    Command.objects.all().delete()
     return HttpResponse('数据库文件已删除')
 
 
