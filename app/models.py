@@ -22,3 +22,13 @@ class GcodeFile(models.Model):
     gcode_printer_id = models.CharField(max_length=100, blank=True, null=True, default='no')
 
     gcode_printfailed = models.BooleanField(default=False)
+
+
+# command
+class Command(models.Model):
+    printer_id = models.CharField(max_length=100, primary_key=True)
+    print = models.BooleanField(default=False)
+    cancel = models.BooleanField(default=False)
+    resume = models.BooleanField(default=False)
+    pause = models.BooleanField(default=False)
+    home = models.BooleanField(default=False)

@@ -69,7 +69,7 @@ input {
     border: none;
     outline: none;
     padding: 5px;
-    font-size: 14px;
+    font-size: 13px;
     color: black;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -107,4 +107,19 @@ input:hover {
     0 12px 12px rgba(128, 128, 128, 0.35);
 }
 
+.container_control {
+    position: relative;
+    width: 820px;
+
+    align-items: center;
+    padding: 5px 5px;
+    color: black;
+    background-image: linear-gradient(-90deg, #29bdd9 0%, #276ace 100%);
+    border-radius: 10px;
+    box-shadow: 0 0.4px 0.4px rgba(128, 128, 128, 0.109),
+    0 1px 1px rgba(128, 128, 128, 0.155),
+    0 2.1px 2.1px rgba(128, 128, 128, 0.195),
+    0 4.4px 4.4px rgba(128, 128, 128, 0.241),
+    0 12px 12px rgba(128, 128, 128, 0.35);
+}
 

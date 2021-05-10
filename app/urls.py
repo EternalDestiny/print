@@ -19,6 +19,9 @@ urlpatterns = [
     # 下载gcode文件
     path('download_gcode_file/<str:filename>/', views.download_gcode_file, name='downloaded'),
 
+    # 下发控制命令
+    path('cmd/', views.cmd, name='cmd'),
+
     # develop（开发、测试）
     path('develop/del_alldata/', views.del_alldata),
     path('develop/all_data/', views.get_all_model),

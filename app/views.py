@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 
-from app.models import GcodeFile, RegisteredPrinter
+from app.models import GcodeFile, RegisteredPrinter, Command
 from chat.models import Printer, Print
 
 from django.http import FileResponse, JsonResponse, HttpResponse, Http404
 from app.form import PrinterForm
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 import os
@@ -168,7 +168,7 @@ def upload_gcode_file(request):
             for chunk in gcode_file_re.chunks():
                 f.write(chunk)
 
-        develop = False
+        develop = True
         if develop:
             server = 'http://127.0.0.1:8000'
         else:
@@ -213,6 +213,56 @@ def print_gcode(request):
         else:
             tips = '无gcode文件'
             return render(request, 'response.html', context={'tips': tips})
+
+
+@login_required
+def cmd(request):
+    # 选择第一个打印机（当前仅实现一个）
+    printer = Printer.objects.all().first()
+    if not printer:
+        messages.success(request, '无打印机注册')
+        return redirect('/list_websocket/')
+    elif not printer.operational:
+        messages.success(request, '打印机未连接或不可用')
+        return redirect('/list_websocket/')
+    elif printer.closedOrError:
+        messages.success(request, '打印机关闭或错误')
+        return redirect('/list_websocket/')
+    else:
+        command = Command.objects.get_or_create(printer_id=printer.printer_id)[0]
+
+    if request.method == 'POST':
+        cmd = request.POST.get('cmd', '')
+        # print(cmd)
+        # print(type(command))
+
+        if cmd == "回零" and printer.ready:
+            command.home = True
+            command.save()
+            messages.success(request, '命令已发出')
+            return redirect('/list_websocket/')
+
+        if cmd == "暂停打印" and printer.printing:
+            command.pause = True
+            command.save()
+            messages.success(request, '命令已发出')
+            return redirect('/list_websocket/')
+
+        if cmd == "继续打印" and printer.paused:
+            command.resume = True
+            cmd.save()
+            messages.success(request, '命令已发出')
+            return redirect('/list_websocket/')
+
+        if cmd == "取消打印" and printer.printing:
+            command.cancel = True
+            command.save()
+            messages.success(request, '命令已发出')
+            return redirect('/list_websocket/')
+
+        else:
+            messages.success(request, '无效命令')
+            return redirect('/list_websocket/')
 
 
 # 开发测试用

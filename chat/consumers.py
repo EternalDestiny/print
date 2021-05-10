@@ -5,7 +5,7 @@ import datetime
 from channels.generic.websocket import WebsocketConsumer
 import threading
 
-from app.models import RegisteredPrinter, GcodeFile
+from app.models import RegisteredPrinter, GcodeFile, Command
 from .models import Print, Printer
 
 # from channels.db import database_sync_to_async
@@ -18,6 +18,35 @@ class PrinterConsumer(WebsocketConsumer):
     def connect(self):
         # 在这里添加plugin连接的验证信息，验证成功才能连接，本系统尚未实现
         self.accept()
+
+        self.send_cmd_thread = threading.Thread(target=self.send_cmd)
+        self.send_cmd_thread.daemon = True
+        self.send_cmd_thread.start()
+
+    def send_cmd(self):
+        while True:
+            time.sleep(0.5)
+            command = Command.objects.all().first()
+            if command:
+                if command.pause:
+                    cmd = 'pause'
+                    command.pause = False
+                    command.save()
+                elif command.cancel:
+                    cmd = 'cancel'
+                    command.cancel = False
+                    command.save()
+                elif command.resume:
+                    cmd = 'resume'
+                    command.resume = False
+                    command.save()
+                elif command.home:
+                    cmd = 'home'
+                    command.home = False
+                    command.save()
+                else:
+                    cmd = None
+                self.send_data_to_client(command=cmd)
 
     def receive(self, text_data=None, bytes_data=None):
         data = json.loads(text_data)
@@ -64,6 +93,7 @@ class PrinterConsumer(WebsocketConsumer):
                 printer_state.__delitem__('sdReady')
                 printer.update(**printer_state)
                 self.send_data_to_client(message='打印机状态接收成功')
+
             if temperatures:
                 printer.update(tool0_temperature=temperatures.get('tool0', {}).get('actual', 0))
                 printer.update(tool1_temperature=temperatures.get('tool1', {}).get('actual', 0))
@@ -147,6 +177,7 @@ class PrinterConsumer(WebsocketConsumer):
                 'command': command,
                 'data': data,
             }))
+        return
 
 
 #与前端网页的websocket，负责推送数据

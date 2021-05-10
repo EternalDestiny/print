@@ -34,7 +34,7 @@
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        console.log(data)
+        {#console.log(data)#}
         const printer_state = JSON.stringify(data.printer_state)
         document.querySelector('#printer_state').value = printer_state;
 
@@ -94,6 +94,7 @@
 
 <br>
 
+
 <form enctype="multipart/form-data" action="/upload_gcode_file/" method="post">
     {% csrf_token %}
     <input type="file" name="gcode_file"/>
@@ -127,11 +128,7 @@
     </table>
 {% endif %}
 
-{#<form action="delgcodedata/" method="POST">#}
-{#    {% csrf_token %}#}
-{#    <input type="number" name="gcode_id">#}
-{#    <input type="submit" value="delete_gcode">#}
-{#</form>#}
+
 <form action="/delgcodedata/" method="GET">
     {% csrf_token %}
     <input type="submit" value="delete_gcode">
@@ -147,6 +144,18 @@
     {% csrf_token %}
     <input type="submit" value="print_gcode">
 </form>
+
+<br>
+<div class="container_control">
+    <form action="/cmd/" method="POST">
+        {% csrf_token %}
+        {#    <input type="submit" value="print">#}
+        <input type="submit" name="cmd" value="暂停打印">
+        <input type="submit" name="cmd" value="继续打印">
+        <input type="submit" name="cmd" value="取消打印">
+        <input type="submit" name="cmd" value="回零">
+    </form>
+</div>
 <br>
 <div class="container">*****打印进度*****：<br>
     预计打印时间：
@@ -194,6 +203,15 @@
     }
 </script>
 <script src="{% static "js/canvas-particle.js" %}"></script>
+
+{% if messages %}
+    <script>
+        {% for msg in messages %}
+            alert('{{ msg.message }}');
+        {% endfor %}
+    </script>
+{% endif %}
+
 
 </body>
 </html>
