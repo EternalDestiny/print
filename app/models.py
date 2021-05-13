@@ -69,7 +69,7 @@ class GcodeFile(models.Model):
     gcode_selected = models.BooleanField(default=False)
     gcode_printing = models.BooleanField(default=False)
 
-    # gcode_printer_id = models.CharField(max_length=100, blank=True, null=True, default='no')
+    gcode_printer_id = models.CharField(max_length=100, blank=True, null=True, default='no')
 
     gcode_printfailed = models.BooleanField(default=False)
 
