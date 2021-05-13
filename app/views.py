@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 
-from app.models import GcodeFile, RegisteredPrinter, Command
-from chat.models import Printer, Print
+from app.models import GcodeFile, RegisteredPrinter, Command, Printer, Print
 
-from django.http import FileResponse, JsonResponse, HttpResponse, Http404
+from django.http import FileResponse, HttpResponse, Http404
 from app.form import PrinterForm
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
@@ -33,18 +32,29 @@ def printerlist(request):
 def register_printer(request):
     if request.method == 'GET':
         printer_id = request.GET.get('printer_id', '')
-        if printer_id:
-            i = RegisteredPrinter.objects.filter(printer_id=printer_id).first()
-            v = PrinterForm(instance=i, prefix='vv')
-            Printer.objects.get_or_create(printer_id=printer_id)
-        else:
-            v = PrinterForm(prefix='vv')
 
+        if printer_id:
+            i = RegisteredPrinter.objects.filter(printer_id=printer_id).first()  # 未使用，可以用作查询
+            v = PrinterForm(instance=i, prefix='vv')
+        else:
+            # 自定义表单前缀'vv'
+            v = PrinterForm(prefix='vv')
         return render(request, 'register_printer.html', locals())
 
     if request.method == 'POST':
         v = PrinterForm(data=request.POST, prefix='vv')
+        if request.user.is_authenticated:
+            username = request.user.username
+        # else:
+        #     messages.success(request, '未登录')
+        #     return redirect('/register_printer/')
+
         if v.is_valid():
+            owner = request.POST['vv-owner']
+            # 判断owner是否为当前登录用户
+            if not owner == username:
+                messages.success(request, '用户名称不匹配')
+                return redirect('/register_printer/')
             printer_id = request.POST['vv-printer_id']
             result = RegisteredPrinter.objects.filter(printer_id=printer_id)
             if not result:
@@ -56,7 +66,6 @@ def register_printer(request):
         else:
             error_msg = v.errors.as_json()
             return render(request, 'register_printer.html', locals())
-
 
 #插件自动注册3d打印机
 def register_printer_plugin(request):
@@ -207,6 +216,7 @@ def print_gcode(request):
         return redirect('/list_websocket/')
 
     if request.method == 'GET':
+        #因为只有一个gcode文件
         gcode_file_sel = GcodeFile.objects.all().first()
         if gcode_file_sel:
             gcode_id = gcode_file_sel.gcode_id

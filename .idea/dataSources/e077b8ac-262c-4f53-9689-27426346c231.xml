@@ -371,15 +371,15 @@
     <package id="169" parent="1" name="rtree_i32"/>
     <table id="170" parent="2" name="app_command"/>
     <table id="171" parent="2" name="app_gcodefile"/>
-    <table id="172" parent="2" name="app_registeredprinter"/>
-    <table id="173" parent="2" name="auth_group"/>
-    <table id="174" parent="2" name="auth_group_permissions"/>
-    <table id="175" parent="2" name="auth_permission"/>
-    <table id="176" parent="2" name="auth_user"/>
-    <table id="177" parent="2" name="auth_user_groups"/>
-    <table id="178" parent="2" name="auth_user_user_permissions"/>
-    <table id="179" parent="2" name="chat_print"/>
-    <table id="180" parent="2" name="chat_printer"/>
+    <table id="172" parent="2" name="app_print"/>
+    <table id="173" parent="2" name="app_printer"/>
+    <table id="174" parent="2" name="app_registeredprinter"/>
+    <table id="175" parent="2" name="auth_group"/>
+    <table id="176" parent="2" name="auth_group_permissions"/>
+    <table id="177" parent="2" name="auth_permission"/>
+    <table id="178" parent="2" name="auth_user"/>
+    <table id="179" parent="2" name="auth_user_groups"/>
+    <table id="180" parent="2" name="auth_user_user_permissions"/>
     <table id="181" parent="2" name="django_admin_log"/>
     <table id="182" parent="2" name="django_content_type"/>
     <table id="183" parent="2" name="django_migrations"/>
@@ -1424,629 +1424,625 @@
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="521" parent="171" name="gcode_printer_id">
+    <column id="521" parent="171" name="gcode_printfailed">
       <Position>8</Position>
-      <DataType>varchar(100)|0s</DataType>
-    </column>
-    <column id="522" parent="171" name="gcode_printfailed">
-      <Position>9</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="523" parent="171">
+    <key id="522" parent="171">
       <ColNames>gcode_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="524" parent="172" name="printer_id">
-      <Position>1</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="525" parent="172" name="owner">
-      <Position>2</Position>
-      <DataType>varchar(20)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="526" parent="172" name="address">
-      <Position>3</Position>
-      <DataType>varchar(20)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="527" parent="172" name="sqlite_autoindex_app_registeredprinter_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>printer_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="528" parent="172">
-      <ColNames>printer_id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>sqlite_autoindex_app_registeredprinter_1</UnderlyingIndexName>
-    </key>
-    <column id="529" parent="173" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="530" parent="173" name="name">
-      <Position>2</Position>
-      <DataType>varchar(150)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="531" parent="173" name="sqlite_autoindex_auth_group_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>name</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="532" parent="173">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <key id="533" parent="173">
-      <ColNames>name</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_auth_group_1</UnderlyingIndexName>
-    </key>
-    <column id="534" parent="174" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="535" parent="174" name="group_id">
-      <Position>2</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="536" parent="174" name="permission_id">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="537" parent="174" name="auth_group_permissions_group_id_permission_id_0cd325b0_uniq">
-      <ColNames>group_id
-permission_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="538" parent="174" name="auth_group_permissions_group_id_b120cbf9">
-      <ColNames>group_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="539" parent="174" name="auth_group_permissions_permission_id_84c5c92e">
-      <ColNames>permission_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="540" parent="174">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="541" parent="174">
-      <ColNames>group_id</ColNames>
-      <RefTableName>auth_group</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <foreign-key id="542" parent="174">
-      <ColNames>permission_id</ColNames>
-      <RefTableName>auth_permission</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <column id="543" parent="175" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="544" parent="175" name="content_type_id">
-      <Position>2</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="545" parent="175" name="codename">
-      <Position>3</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="546" parent="175" name="name">
-      <Position>4</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="547" parent="175" name="auth_permission_content_type_id_codename_01ab375a_uniq">
-      <ColNames>content_type_id
-codename</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="548" parent="175" name="auth_permission_content_type_id_2f476e4b">
-      <ColNames>content_type_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="549" parent="175">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="550" parent="175">
-      <ColNames>content_type_id</ColNames>
-      <RefTableName>django_content_type</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <column id="551" parent="176" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="552" parent="176" name="password">
-      <Position>2</Position>
-      <DataType>varchar(128)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="553" parent="176" name="last_login">
-      <Position>3</Position>
-      <DataType>datetime|0s</DataType>
-    </column>
-    <column id="554" parent="176" name="is_superuser">
-      <Position>4</Position>
-      <DataType>bool|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="555" parent="176" name="username">
-      <Position>5</Position>
-      <DataType>varchar(150)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="556" parent="176" name="last_name">
-      <Position>6</Position>
-      <DataType>varchar(150)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="557" parent="176" name="email">
-      <Position>7</Position>
-      <DataType>varchar(254)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="558" parent="176" name="is_staff">
-      <Position>8</Position>
-      <DataType>bool|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="559" parent="176" name="is_active">
-      <Position>9</Position>
-      <DataType>bool|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="560" parent="176" name="date_joined">
-      <Position>10</Position>
-      <DataType>datetime|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="561" parent="176" name="first_name">
-      <Position>11</Position>
-      <DataType>varchar(150)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="562" parent="176" name="sqlite_autoindex_auth_user_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>username</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="563" parent="176">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <key id="564" parent="176">
-      <ColNames>username</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_auth_user_1</UnderlyingIndexName>
-    </key>
-    <column id="565" parent="177" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="566" parent="177" name="user_id">
-      <Position>2</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="567" parent="177" name="group_id">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="568" parent="177" name="auth_user_groups_user_id_group_id_94350c0c_uniq">
-      <ColNames>user_id
-group_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="569" parent="177" name="auth_user_groups_user_id_6a12ed8b">
-      <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="570" parent="177" name="auth_user_groups_group_id_97559544">
-      <ColNames>group_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="571" parent="177">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="572" parent="177">
-      <ColNames>user_id</ColNames>
-      <RefTableName>auth_user</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <foreign-key id="573" parent="177">
-      <ColNames>group_id</ColNames>
-      <RefTableName>auth_group</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <column id="574" parent="178" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="575" parent="178" name="user_id">
-      <Position>2</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="576" parent="178" name="permission_id">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="577" parent="178" name="auth_user_user_permissions_user_id_permission_id_14a6b632_uniq">
-      <ColNames>user_id
-permission_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="578" parent="178" name="auth_user_user_permissions_user_id_a95ead1b">
-      <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="579" parent="178" name="auth_user_user_permissions_permission_id_1fbb5f2c">
-      <ColNames>permission_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="580" parent="178">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="581" parent="178">
-      <ColNames>user_id</ColNames>
-      <RefTableName>auth_user</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <foreign-key id="582" parent="178">
-      <ColNames>permission_id</ColNames>
-      <RefTableName>auth_permission</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <column id="583" parent="179" name="gcodefile_id">
+    <column id="523" parent="172" name="gcodefile_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="584" parent="179" name="estimatedPrintTime">
+    <column id="524" parent="172" name="estimatedPrintTime">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="585" parent="179" name="completion">
+    <column id="525" parent="172" name="completion">
       <Position>3</Position>
       <DataType>real|0s</DataType>
     </column>
-    <column id="586" parent="179" name="printTime">
+    <column id="526" parent="172" name="printTime">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="587" parent="179" name="printTimeLeft">
+    <column id="527" parent="172" name="printTimeLeft">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <key id="588" parent="179">
+    <key id="528" parent="172">
       <ColNames>gcodefile_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="589" parent="179">
+    <foreign-key id="529" parent="172">
       <ColNames>gcodefile_id</ColNames>
       <RefTableName>app_gcodefile</RefTableName>
       <RefColNames>gcode_id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-    <column id="590" parent="180" name="printer_id">
+    <column id="530" parent="173" name="printer_id">
       <Position>1</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="591" parent="180" name="operational">
+    <column id="531" parent="173" name="operational">
       <Position>2</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="592" parent="180" name="printing">
+    <column id="532" parent="173" name="printing">
       <Position>3</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="593" parent="180" name="cancelling">
+    <column id="533" parent="173" name="cancelling">
       <Position>4</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="594" parent="180" name="pausing">
+    <column id="534" parent="173" name="pausing">
       <Position>5</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="595" parent="180" name="resuming">
+    <column id="535" parent="173" name="resuming">
       <Position>6</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="596" parent="180" name="finishing">
+    <column id="536" parent="173" name="finishing">
       <Position>7</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="597" parent="180" name="closedOrError">
+    <column id="537" parent="173" name="closedOrError">
       <Position>8</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="598" parent="180" name="error">
+    <column id="538" parent="173" name="error">
       <Position>9</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="599" parent="180" name="paused">
+    <column id="539" parent="173" name="paused">
       <Position>10</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="600" parent="180" name="ready">
+    <column id="540" parent="173" name="ready">
       <Position>11</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="601" parent="180" name="tool0_temperature">
+    <column id="541" parent="173" name="tool0_temperature">
       <Position>12</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="602" parent="180" name="bed_temperature">
+    <column id="542" parent="173" name="tool1_temperature">
       <Position>13</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="603" parent="180" name="current_print_id">
+    <column id="543" parent="173" name="bed_temperature">
       <Position>14</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="604" parent="180" name="tool1_temperature">
+    <column id="544" parent="173" name="current_print_id">
       <Position>15</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <index id="605" parent="180" name="sqlite_autoindex_chat_printer_1">
+    <index id="545" parent="173" name="sqlite_autoindex_app_printer_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>printer_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="606" parent="180" name="sqlite_autoindex_chat_printer_2">
+    <index id="546" parent="173" name="sqlite_autoindex_app_printer_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>current_print_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="607" parent="180">
+    <key id="547" parent="173">
       <ColNames>printer_id</ColNames>
       <Primary>1</Primary>
-      <UnderlyingIndexName>sqlite_autoindex_chat_printer_1</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_app_printer_1</UnderlyingIndexName>
     </key>
-    <key id="608" parent="180">
+    <key id="548" parent="173">
       <ColNames>current_print_id</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_chat_printer_2</UnderlyingIndexName>
+      <UnderlyingIndexName>sqlite_autoindex_app_printer_2</UnderlyingIndexName>
     </key>
-    <foreign-key id="609" parent="180">
+    <foreign-key id="549" parent="173">
       <ColNames>current_print_id</ColNames>
-      <RefTableName>chat_print</RefTableName>
+      <RefTableName>app_print</RefTableName>
       <RefColNames>gcodefile_id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-    <column id="610" parent="181" name="id">
+    <column id="550" parent="174" name="printer_id">
+      <Position>1</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="551" parent="174" name="address">
+      <Position>2</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="552" parent="174" name="owner">
+      <Position>3</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="553" parent="174" name="sqlite_autoindex_app_registeredprinter_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>printer_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="554" parent="174">
+      <ColNames>printer_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_app_registeredprinter_1</UnderlyingIndexName>
+    </key>
+    <column id="555" parent="175" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="611" parent="181" name="action_time">
+    <column id="556" parent="175" name="name">
       <Position>2</Position>
-      <DataType>datetime|0s</DataType>
+      <DataType>varchar(150)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="612" parent="181" name="object_id">
-      <Position>3</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="613" parent="181" name="object_repr">
-      <Position>4</Position>
-      <DataType>varchar(200)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="614" parent="181" name="change_message">
-      <Position>5</Position>
-      <DataType>text|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="615" parent="181" name="content_type_id">
-      <Position>6</Position>
-      <DataType>integer|0s</DataType>
-    </column>
-    <column id="616" parent="181" name="user_id">
-      <Position>7</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="617" parent="181" name="action_flag">
-      <Position>8</Position>
-      <DataType>smallint unsigned|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="618" parent="181" name="django_admin_log_content_type_id_c4bce8eb">
-      <ColNames>content_type_id</ColNames>
+    <index id="557" parent="175" name="sqlite_autoindex_auth_group_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
     </index>
-    <index id="619" parent="181" name="django_admin_log_user_id_c564eba6">
-      <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="620" parent="181">
+    <key id="558" parent="175">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="621" parent="181">
+    <key id="559" parent="175">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_auth_group_1</UnderlyingIndexName>
+    </key>
+    <column id="560" parent="176" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="561" parent="176" name="group_id">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="562" parent="176" name="permission_id">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="563" parent="176" name="auth_group_permissions_group_id_permission_id_0cd325b0_uniq">
+      <ColNames>group_id
+permission_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="564" parent="176" name="auth_group_permissions_group_id_b120cbf9">
+      <ColNames>group_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="565" parent="176" name="auth_group_permissions_permission_id_84c5c92e">
+      <ColNames>permission_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="566" parent="176">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="567" parent="176">
+      <ColNames>group_id</ColNames>
+      <RefTableName>auth_group</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <foreign-key id="568" parent="176">
+      <ColNames>permission_id</ColNames>
+      <RefTableName>auth_permission</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <column id="569" parent="177" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="570" parent="177" name="content_type_id">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="571" parent="177" name="codename">
+      <Position>3</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="572" parent="177" name="name">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="573" parent="177" name="auth_permission_content_type_id_codename_01ab375a_uniq">
+      <ColNames>content_type_id
+codename</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="574" parent="177" name="auth_permission_content_type_id_2f476e4b">
+      <ColNames>content_type_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="575" parent="177">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="576" parent="177">
       <ColNames>content_type_id</ColNames>
       <RefTableName>django_content_type</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-    <foreign-key id="622" parent="181">
+    <column id="577" parent="178" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="578" parent="178" name="password">
+      <Position>2</Position>
+      <DataType>varchar(128)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="579" parent="178" name="last_login">
+      <Position>3</Position>
+      <DataType>datetime|0s</DataType>
+    </column>
+    <column id="580" parent="178" name="is_superuser">
+      <Position>4</Position>
+      <DataType>bool|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="581" parent="178" name="username">
+      <Position>5</Position>
+      <DataType>varchar(150)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="582" parent="178" name="last_name">
+      <Position>6</Position>
+      <DataType>varchar(150)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="583" parent="178" name="email">
+      <Position>7</Position>
+      <DataType>varchar(254)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="584" parent="178" name="is_staff">
+      <Position>8</Position>
+      <DataType>bool|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="585" parent="178" name="is_active">
+      <Position>9</Position>
+      <DataType>bool|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="586" parent="178" name="date_joined">
+      <Position>10</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="587" parent="178" name="first_name">
+      <Position>11</Position>
+      <DataType>varchar(150)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="588" parent="178" name="sqlite_autoindex_auth_user_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>username</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="589" parent="178">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="590" parent="178">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_auth_user_1</UnderlyingIndexName>
+    </key>
+    <column id="591" parent="179" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="592" parent="179" name="user_id">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="593" parent="179" name="group_id">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="594" parent="179" name="auth_user_groups_user_id_group_id_94350c0c_uniq">
+      <ColNames>user_id
+group_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="595" parent="179" name="auth_user_groups_user_id_6a12ed8b">
+      <ColNames>user_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="596" parent="179" name="auth_user_groups_group_id_97559544">
+      <ColNames>group_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="597" parent="179">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="598" parent="179">
       <ColNames>user_id</ColNames>
       <RefTableName>auth_user</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-    <check id="623" parent="181">
-      <Predicate>&quot;action_flag&quot; &gt;= 0</Predicate>
-    </check>
-    <column id="624" parent="182" name="id">
+    <foreign-key id="599" parent="179">
+      <ColNames>group_id</ColNames>
+      <RefTableName>auth_group</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <column id="600" parent="180" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="625" parent="182" name="app_label">
+    <column id="601" parent="180" name="user_id">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="602" parent="180" name="permission_id">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="603" parent="180" name="auth_user_user_permissions_user_id_permission_id_14a6b632_uniq">
+      <ColNames>user_id
+permission_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="604" parent="180" name="auth_user_user_permissions_user_id_a95ead1b">
+      <ColNames>user_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="605" parent="180" name="auth_user_user_permissions_permission_id_1fbb5f2c">
+      <ColNames>permission_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="606" parent="180">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="607" parent="180">
+      <ColNames>user_id</ColNames>
+      <RefTableName>auth_user</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <foreign-key id="608" parent="180">
+      <ColNames>permission_id</ColNames>
+      <RefTableName>auth_permission</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <column id="609" parent="181" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="610" parent="181" name="action_time">
+      <Position>2</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="611" parent="181" name="object_id">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="612" parent="181" name="object_repr">
+      <Position>4</Position>
+      <DataType>varchar(200)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="613" parent="181" name="change_message">
+      <Position>5</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="614" parent="181" name="content_type_id">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="615" parent="181" name="user_id">
+      <Position>7</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="616" parent="181" name="action_flag">
+      <Position>8</Position>
+      <DataType>smallint unsigned|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="617" parent="181" name="django_admin_log_content_type_id_c4bce8eb">
+      <ColNames>content_type_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="618" parent="181" name="django_admin_log_user_id_c564eba6">
+      <ColNames>user_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="619" parent="181">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="620" parent="181">
+      <ColNames>content_type_id</ColNames>
+      <RefTableName>django_content_type</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <foreign-key id="621" parent="181">
+      <ColNames>user_id</ColNames>
+      <RefTableName>auth_user</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <check id="622" parent="181">
+      <Predicate>&quot;action_flag&quot; &gt;= 0</Predicate>
+    </check>
+    <column id="623" parent="182" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="624" parent="182" name="app_label">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="626" parent="182" name="model">
+    <column id="625" parent="182" name="model">
       <Position>3</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="627" parent="182" name="django_content_type_app_label_model_76bd3d3b_uniq">
+    <index id="626" parent="182" name="django_content_type_app_label_model_76bd3d3b_uniq">
       <ColNames>app_label
 model</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="628" parent="182">
+    <key id="627" parent="182">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="629" parent="183" name="id">
+    <column id="628" parent="183" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="630" parent="183" name="app">
+    <column id="629" parent="183" name="app">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="631" parent="183" name="name">
+    <column id="630" parent="183" name="name">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="632" parent="183" name="applied">
+    <column id="631" parent="183" name="applied">
       <Position>4</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="633" parent="183">
+    <key id="632" parent="183">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="634" parent="184" name="session_key">
+    <column id="633" parent="184" name="session_key">
       <Position>1</Position>
       <DataType>varchar(40)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="635" parent="184" name="session_data">
+    <column id="634" parent="184" name="session_data">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="636" parent="184" name="expire_date">
+    <column id="635" parent="184" name="expire_date">
       <Position>3</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="637" parent="184" name="sqlite_autoindex_django_session_1">
+    <index id="636" parent="184" name="sqlite_autoindex_django_session_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>session_key</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="638" parent="184" name="django_session_expire_date_a5c62663">
+    <index id="637" parent="184" name="django_session_expire_date_a5c62663">
       <ColNames>expire_date</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="639" parent="184">
+    <key id="638" parent="184">
       <ColNames>session_key</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_django_session_1</UnderlyingIndexName>
     </key>
-    <column id="640" parent="185" name="type">
+    <column id="639" parent="185" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="641" parent="185" name="name">
+    <column id="640" parent="185" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="642" parent="185" name="tbl_name">
+    <column id="641" parent="185" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="643" parent="185" name="rootpage">
+    <column id="642" parent="185" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="644" parent="185" name="sql">
+    <column id="643" parent="185" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="645" parent="186" name="name">
+    <column id="644" parent="186" name="name">
       <Position>1</Position>
     </column>
-    <column id="646" parent="186" name="seq">
+    <column id="645" parent="186" name="seq">
       <Position>2</Position>
     </column>
   </database-model>
