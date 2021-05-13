@@ -145,18 +145,18 @@
     <input type="submit" value="print_gcode">
 </form>
 
-<br>
-<div class="container_control">
-    <form action="/cmd/" method="POST">
-        {% csrf_token %}
-        {#    <input type="submit" value="print">#}
-        <input type="submit" name="cmd" value="暂停打印">
-        <input type="submit" name="cmd" value="继续打印">
-        <input type="submit" name="cmd" value="取消打印">
-        <input type="submit" name="cmd" value="回零">
-    </form>
-</div>
-<br>
+{#<br>#}
+{#<div class="container_control">#}
+{#    <form action="/cmd/" method="POST">#}
+{#        {% csrf_token %}#}
+{#    <input type="submit" value="print">#}
+{#        <input type="submit" name="cmd" value="暂停打印">#}
+{#        <input type="submit" name="cmd" value="继续打印">#}
+{#        <input type="submit" name="cmd" value="取消打印">#}
+{#        <input type="submit" name="cmd" value="回零">#}
+{#    </form>#}
+{#</div>#}
+{#<br>#}
 <div class="container">*****打印进度*****：<br>
     预计打印时间：
     <output id="estimatedPrintTime"></output>
